@@ -43,6 +43,21 @@ function passarMes() {
     if(p.job) p.grana += (p.job.sal / 12);
     if(p.fans > 100000) p.grana += (p.fans * 0.002);
     update();
+    
+function passarMes() {
+if(p.preso) {
+    if(p.mes === 0) { // Uma vez por ano na cadeia
+        p.pena--;
+        if(p.pena <= 0) {
+            p.preso = false;
+            flash("🕊️ LIBERDADE! Sua pena acabou.");
+            addLog("Você saiu da detenção. Vida nova?");
+        }
+    }
+    update();
+    return; // Impede que ganhe salário ou faça outras coisas
+}
+
 }
 
 // Funções de Menu
