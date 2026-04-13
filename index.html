@@ -2,274 +2,250 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>BitLife Brasil: Mobile Edition</title>
-    
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>BitLife Brasil: Vida Real</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <link rel="icon" type="image/png" href="image_0.png">
-    <link rel="apple-touch-icon" href="image_0.png">
-    <meta name="theme-color" content="#27ae60">
-
     <style>
         :root {
-            --bg: #f0f2f5; --card: #ffffff; --primary: #27ae60;
-            --secondary: #2980b9; --danger: #c0392b; --social: #e1306c;
-            --text: #1c1e21; --gold: #f1c40f; --accent: #8e44ad;
+            --bg: #f4f7f6; --card: #ffffff; --primary: #27ae60;
+            --secondary: #2980b9; --danger: #e74c3c; --social: #e1306c;
+            --text: #2c3e50; --gold: #f1c40f; --accent: #8e44ad;
         }
 
-        /* Estilo Mobile-First */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-            user-select: none; -webkit-user-select: none;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg); margin: 0; color: var(--text); overflow: hidden;
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; overflow: hidden; color: var(--text); }
         #app { width: 100%; max-width: 500px; height: 100vh; margin: auto; display: flex; flex-direction: column; position: relative; }
 
-        /* Header Status */
+        /* Header e Status */
         #header { 
-            background: var(--primary); color: white; padding: 25px 20px 15px; 
-            border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10;
+            background: var(--primary); color: white; padding: 30px 20px 20px; 
+            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;
         }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
-        .stat-item { background: rgba(255,255,255,0.15); padding: 6px; border-radius: 10px; text-align: center; font-size: 11px; font-weight: bold; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .stat-item { background: rgba(255,255,255,0.2); padding: 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
 
-        /* Log de Eventos */
-        #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 10px; background: var(--bg); }
+        /* Log de Acontecimentos */
+        #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 10px; }
         .log-entry { 
-            background: white; padding: 15px; border-radius: 15px; font-size: 14px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); animation: slideIn 0.3s ease-out;
-            border-left: 5px solid var(--primary);
+            background: white; padding: 15px; border-radius: 18px; font-size: 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-left: 6px solid var(--primary);
+            animation: slideIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Controles Inferiores */
-        .main-nav { 
-            background: white; padding: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
-            border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
-        }
-        button { border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.2s; color: white; padding: 12px 5px; font-size: 12px; }
-        .btn-main { grid-column: span 4; padding: 18px; font-size: 18px; background: var(--primary); margin-bottom: 5px; box-shadow: 0 4px 0 #1e8449; }
-        .btn-main:active { transform: translateY(3px); box-shadow: none; }
-
-        /* Telas de Menu */
-        .overlay { 
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg); z-index: 100; flex-direction: column; padding: 20px;
-        }
-        .card { 
-            background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
+        /* Animações de Conquista */
         #pop-alert {
-            display: none; position: absolute; top: 20%; left: 10%; width: 80%;
-            background: var(--gold); padding: 20px; border-radius: 20px; text-align: center;
-            z-index: 1000; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: bounce 0.5s infinite alternate;
+            display: none; position: absolute; top: 25%; left: 10%; width: 80%;
+            background: var(--gold); padding: 30px; border-radius: 25px; text-align: center;
+            z-index: 1000; font-weight: 900; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border: 5px solid white; animation: popAnim 0.5s ease-out;
         }
-        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.05); } }
+        @keyframes popAnim { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+        /* Navegação */
+        .nav { 
+            background: white; padding: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+            border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        }
+        button { border: none; border-radius: 15px; font-weight: bold; cursor: pointer; color: white; padding: 12px 5px; font-size: 11px; transition: 0.2s; }
+        .btn-age { grid-column: span 4; padding: 20px; font-size: 20px; background: var(--primary); margin-bottom: 5px; box-shadow: 0 5px 0 #1e8449; }
+        .btn-age:active { transform: translateY(4px); box-shadow: none; }
+
+        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; flex-direction: column; padding: 20px; }
+        .card { background: white; padding: 15px; border-radius: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div id="pop-alert">CONQUISTA!</div>
+    <div id="pop-alert">✨ CONQUISTA! ✨</div>
 
     <div id="header">
-        <div id="v-job" style="font-size: 20px; font-weight: bold; opacity: 0.9;">Iniciando Vida...</div>
-        <div id="v-money" style="font-size: 32px; font-weight: 900; margin: 5px 0;">R$ 50</div>
+        <div id="v-job" style="font-size: 22px; font-weight: 900;">Desempregado</div>
+        <div id="v-money" style="font-size: 32px; font-weight: 900; margin: 8px 0;">R$ 50</div>
         <div class="stats-grid">
             <div class="stat-item">📅 <span id="v-date">Jan, 0 anos</span></div>
             <div class="stat-item">🎓 Edu: <span id="v-edu">0</span></div>
             <div class="stat-item">📱 <span id="v-fans">0</span> fãs</div>
         </div>
+        <div id="v-birth" style="font-size: 10px; margin-top: 10px; opacity: 0.8;">Nascido em: --/--/----</div>
     </div>
 
     <div id="log"></div>
 
     <div id="modal" class="overlay">
-        <h2 id="m-title" style="text-align: center;">Menu</h2>
-        <div id="m-content" style="flex:1; overflow-y:auto;"></div>
-        <button onclick="closeMod()" style="background:#333; padding:15px; width:100%; margin-top:10px;">VOLTAR</button>
+        <h2 id="m-title" style="text-align: center; font-size: 24px;">Menu</h2>
+        <div id="m-content" style="flex:1; overflow-y:auto; padding-bottom: 20px;"></div>
+        <button onclick="closeMod()" style="background:#333; padding:20px; width:100%; border-radius: 20px; font-size: 16px;">VOLTAR</button>
     </div>
 
-    <div class="main-nav">
-        <button class="btn-main" onclick="nextMonth()">AVANÇAR MÊS ➔</button>
-        <button style="background: var(--secondary)" onclick="openMod('jobs')">💼 Trampo</button>
-        <button style="background: #16a085" onclick="openMod('bicos')">💸 Bicos</button>
-        <button style="background: var(--social)" onclick="openMod('social')">📱 Social</button>
-        <button style="background: var(--accent)" onclick="openMod('edu')">🎓 Estudo</button>
+    <div class="nav">
+        <button class="btn-age" onclick="passarMes()">PRÓXIMO MÊS ➔</button>
+        <button style="background: var(--secondary)" onclick="abrir('jobs')">💼 Carreira</button>
+        <button style="background: var(--accent)" onclick="abrir('edu')">🎓 Estudar</button>
+        <button style="background: var(--social)" onclick="abrir('social')">📱 Social</button>
+        <button style="background: #e67e22" onclick="abrir('love')">❤️ Amor</button>
     </div>
 </div>
 
 <script>
-// --- BANCO DE DADOS (100 Empregos, Cursos e Eventos) ---
+// --- BANCO DE DADOS ---
 const DB = {
     empregos: [
-        {n:"Entregador", s:15000, a:14, e:0}, {n:"Lixeiro", s:19000, a:18, e:0},
-        {n:"Vendedor de Picolé", s:12000, a:12, e:0}, {n:"Frentista", s:25000, a:18, e:0},
-        {n:"Repositor", s:20000, a:17, e:0}, {n:"Segurança", s:30000, a:21, e:0},
-        {n:"Recepcionista", s:24000, a:18, e:1}, {n:"Auxiliar Adm", s:28000, a:18, e:1},
-        {n:"Técnico em TI", s:48000, a:18, e:2}, {n:"Eletricista", s:45000, a:18, e:1},
-        {n:"Corretor", s:60000, a:20, e:1}, {n:"Designer", s:55000, a:18, e:2},
-        {n:"Professor", s:62000, a:22, e:3}, {n:"Engenheiro Civil", s:95000, a:23, e:3},
-        {n:"Advogado", s:110000, a:23, e:3}, {n:"Arquiteto", s:88000, a:23, e:3},
-        {n:"Médico Geral", s:220000, a:26, e:4}, {n:"Piloto", s:180000, a:21, e:4},
-        {n:"Delegado", s:240000, a:25, e:4}, {n:"Juiz", s:380000, a:28, e:5},
-        {n:"Neurocirurgião", s:550000, a:32, e:5}, {n:"Astronauta", s:720000, a:30, e:5},
-        {n:"Jogador Profissional", s:900000, a:17, e:0}, {n:"Cantor Pop", s:850000, a:16, e:0}
-        // Nota: Use este padrão para chegar a 100.
-    ],
-    bicos: [
-        {n:"Lavar Carro", g:80}, {n:"Passear com Dog", g:50}, {n:"Vender Brigadeiro", g:120},
-        {n:"Cortar Grama", g:100}, {n:"Limpar Vidro", g:70}, {n:"Ajudar Mudança", g:150}
-    ],
-    feedbackChefe: [
-        {m:"O chefe reclamou do seu café.", t:"bad", f:"falta"},
-        {m:"Você bateu a meta do mês!", t:"good", f:"grana"},
-        {m:"Você chegou atrasado na reunião.", t:"bad", f:"falta"},
-        {m:"Feedback: Você é muito proativo!", t:"good", f:"nada"},
-        {m:"O patrão te deu um bônus por dedicação.", t:"good", f:"grana"},
-        {m:"Você cometeu um erro no sistema.", t:"bad", f:"falta"}
+        {n: "Panfleteiro", s: 1300, a: 14, e: 0, cat: "básico"},
+        {n: "Vendedor", s: 2500, a: 18, e: 1, cat: "básico"},
+        {n: "Programador Jr", s: 4500, a: 18, e: 2, cat: "TI"},
+        {n: "Advogado", s: 8500, a: 23, e: 3, cat: "Direito"},
+        {n: "Engenheiro", s: 12000, a: 24, e: 4, cat: "Engenharia"},
+        {n: "Médico Cirurgião", s: 35000, a: 28, e: 5, cat: "Medicina"},
+        {n: "Cantor Profissional", s: 50000, a: 16, e: 0, f: 100000, cat: "Arte"},
+        {n: "Jogador de Futebol", s: 120000, a: 17, e: 0, f: 500000, cat: "Esporte"}
     ],
     cursos: [
-        {n:"Técnico", t:24, e:2, c:400}, {n:"Direito", t:60, e:3, c:1200},
-        {n:"Engenharia", t:60, e:4, c:1800}, {n:"Medicina", t:72, e:5, c:3500}
-    ]
+        {n: "Técnico TI", t: 24, e: 2, c: 500},
+        {n: "Direito", t: 60, e: 3, c: 1500},
+        {n: "Medicina", t: 72, e: 5, c: 4500}
+    ],
+    famosos: ["Neymar", "Anitta", "MrBeast", "Elon Musk", "Virginia", "Casimiro"],
+    frasesChefe: ["O chefe te deu um bônus!", "Você faltou e o chefe gritou!", "Trabalho produtivo!", "Você dormiu no escritório!"]
 };
 
 // --- ESTADO DO JOGO ---
 let p = {
     mes: 0, ano: 0, money: 50, job: null, edu: 0, fans: 0, 
-    faculdade: null, cursoProg: 0, faltas: 0
+    faculdade: null, cursoProg: 0, faltas: 0, energia: 100,
+    nascimento: "", relacao: null
 };
 
-const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+// --- INICIALIZAÇÃO ---
+function iniciar() {
+    let d = Math.floor(Math.random() * 28) + 1;
+    let m = Math.floor(Math.random() * 12) + 1;
+    let a = new Date().getFullYear() - 2026; // Começa em 2026 conforme instrução
+    p.nascimento = `${d}/${m}/${a}`;
+    document.getElementById('v-birth').innerText = `Nascido em: ${p.nascimento}`;
+    update();
+}
 
-function updateUI() {
+function update() {
     document.getElementById('v-money').innerText = "R$ " + Math.floor(p.money).toLocaleString();
-    document.getElementById('v-job').innerText = p.job ? p.job.n : (p.faculdade ? "Estudante" : "Desempregado");
-    document.getElementById('v-date').innerText = `${MESES[p.mes]}, ${p.ano} anos`;
     document.getElementById('v-edu').innerText = p.edu;
     document.getElementById('v-fans').innerText = p.fans >= 1000000 ? (p.fans/1000000).toFixed(1) + "M" : p.fans.toLocaleString();
+    document.getElementById('v-date').innerText = `${["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"][p.mes]}, ${p.ano} anos`;
+    document.getElementById('v-job').innerText = p.job ? p.job.n : (p.faculdade ? "Estudante" : "Desempregado");
+}
+
+function animar(txt) {
+    const el = document.getElementById('pop-alert');
+    el.innerText = txt; el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 2500);
 }
 
 function addLog(msg, cor = "var(--primary)") {
     const log = document.getElementById('log');
     log.innerHTML += `<div class="log-entry" style="border-left-color:${cor}">${msg}</div>`;
-}
-
-function flash(txt) {
-    const d = document.getElementById('pop-alert');
-    d.innerText = txt; d.style.display = 'block';
-    setTimeout(() => d.style.display = 'none', 2000);
+    log.scrollTop = 0;
 }
 
 // --- CORE ---
-function nextMonth() {
+function passarMes() {
     p.mes++;
-    if(p.mes > 11) { p.mes = 0; p.ano++; addLog(`🎈 Feliz ${p.ano}º Aniversário!`, "var(--gold)"); }
+    if(p.mes > 11) { p.mes = 0; p.ano++; animar(`🎂 ${p.ano} ANOS!`); }
 
-    // Trabalho & Chefe
+    // Salário e Eventos
     if(p.job) {
         if(Math.random() < 0.3) {
-            let ev = DB.feedbackChefe[Math.floor(Math.random() * DB.feedbackChefe.length)];
-            addLog(`💼 ${ev.m}`, ev.t === "good" ? "var(--primary)" : "var(--danger)");
-            if(ev.f === "falta") {
-                p.faltas++;
-                if(p.faltas >= 3) { addLog("🚫 DEMITIDO! O chefe perdeu a paciência.", "red"); p.job = null; p.faltas = 0; }
-            } else if(ev.f === "grana") { p.money += 400; }
+            let msg = DB.frasesChefe[Math.floor(Math.random() * DB.frasesChefe.length)];
+            addLog(`💼 TRABALHO: ${msg}`, msg.includes("faltou") ? "var(--danger)" : "var(--primary)");
         }
-        if(p.job) p.money += (p.job.s / 12);
+        p.money += (p.job.s / 12);
     }
 
-    // Faculdade
+    // Estudo
     if(p.faculdade) {
         if(p.money >= p.faculdade.c) {
             p.money -= p.faculdade.c;
             p.cursoProg++;
             if(p.cursoProg >= p.faculdade.t) {
                 p.edu += p.faculdade.e;
-                flash(`🎓 FORMADO EM ${p.faculdade.n}!`);
+                animar("🎓 FORMADO!");
                 p.faculdade = null;
             }
-        } else { addLog("⚠️ Sem grana para a facul!", "orange"); }
+        } else { addLog("⚠️ Sem dinheiro para a mensalidade!", "orange"); }
     }
 
-    // Redes Sociais
-    if(p.fans > 100000) p.money += (p.fans * 0.004);
+    // Monetização Social
+    if(p.fans > 100000) {
+        let ganho = (p.fans * 0.005);
+        p.money += ganho;
+        if(p.mes == 0) addLog(`📱 Adsense: +R$ ${ganho.toFixed(0)}`, "var(--social)");
+    }
 
-    updateUI();
+    update();
 }
 
-function openMod(tipo) {
-    const c = document.getElementById('m-content');
-    c.innerHTML = ""; document.getElementById('modal').style.display = 'flex';
-    
+function abrir(tipo) {
+    const cont = document.getElementById('m-content');
+    cont.innerHTML = ""; document.getElementById('modal').style.display = 'flex';
+    document.getElementById('m-title').innerText = tipo.toUpperCase();
+
     if(tipo === 'jobs') {
-        document.getElementById('m-title').innerText = "Vagas";
         DB.empregos.forEach(j => {
-            let ok = (p.edu >= j.e && p.ano >= j.a);
-            c.innerHTML += `<div class="card">
-                <div><b>${j.n}</b><br><small>R$ ${j.s}/ano</small></div>
-                <button style="background:${ok?'var(--primary)':'#ccc'}" onclick="setJob('${j.n}')">ENTRAR</button>
+            let ok = (p.edu >= j.e && p.ano >= j.a && (j.f ? p.fans >= j.f : true));
+            cont.innerHTML += `<div class="card">
+                <div><b>${j.n}</b><br><small>R$ ${j.s}/mês</small></div>
+                <button style="background:${ok?'var(--primary)':'#ccc'}" onclick="contratar('${j.n}')">ENTRAR</button>
             </div>`;
         });
-    } else if(tipo === 'bicos') {
-        document.getElementById('m-title').innerText = "Bicos";
-        DB.bicos.forEach(b => {
-            c.innerHTML += `<div class="card"><b>${b.n}</b><button style="background:var(--primary)" onclick="doBico('${b.n}')">R$ ${b.g}</button></div>`;
-        });
     } else if(tipo === 'edu') {
-        document.getElementById('m-title').innerText = "Estudo";
-        DB.cursos.forEach(cur => {
-            c.innerHTML += `<div class="card">
-                <div><b>${cur.n}</b><br><small>R$ ${cur.c}/mês</small></div>
-                <button style="background:var(--accent)" onclick="setEdu('${cur.n}')">CURSAR</button>
+        DB.cursos.forEach(c => {
+            cont.innerHTML += `<div class="card">
+                <div><b>${c.n}</b><br><small>R$ ${c.c}/mês</small></div>
+                <button style="background:var(--accent)" onclick="estudar('${c.n}')">MATRICULAR</button>
             </div>`;
         });
     } else if(tipo === 'social') {
-        document.getElementById('m-title').innerText = "Social";
-        c.innerHTML = `<button class="btn-main" style="background:var(--social); width:100%" onclick="post()">📸 Postar Foto Viral</button>`;
+        cont.innerHTML = `
+            <div class="card" style="flex-direction:column">
+                <p>Famosos Online: ${DB.famosos[Math.floor(Math.random()*DB.famosos.length)]}</p>
+                <button style="background:var(--social); width:100%" onclick="postar()">📸 Postar Foto Viral</button>
+            </div>`;
+    } else if(tipo === 'love') {
+        cont.innerHTML = `<button style="background:var(--danger); width:100%" onclick="flertar()">💞 Procurar Pretendente</button>`;
+        if(p.relacao) cont.innerHTML += `<div class="card">❤️ Namorando com ${p.relacao} <button onclick="sairLove()">Sair</button></div>`;
     }
 }
 
-function setJob(n) {
+function contratar(n) {
     let j = DB.empregos.find(x => x.n === n);
-    if(p.edu >= j.e && p.ano >= j.a) { p.job = j; p.faltas = 0; flash("💼 CONTRATADO!"); closeMod(); }
+    if(p.edu >= j.e && p.ano >= j.a && (j.f ? p.fans >= j.f : true)) {
+        p.job = j; animar("💼 NOVA CARREIRA!"); closeMod();
+    }
 }
 
-function setEdu(n) {
+function estudar(n) {
     p.faculdade = DB.cursos.find(x => x.n === n);
-    p.cursoProg = 0; flash("📖 MATRICULADO!"); closeMod();
+    p.cursoProg = 0; animar("📖 NA FACULDADE!"); closeMod();
 }
 
-function doBico(n) {
-    let b = DB.bicos.find(x => x.n === n);
-    p.money += b.g; addLog(`💸 Bico: ${b.n} (+R$ ${b.g})`); closeMod();
+function postar() {
+    let ganho = Math.floor(Math.random() * 5000);
+    p.fans += ganho;
+    animar(`📱 +${ganho} SEGUIDORES!`);
+    closeMod();
 }
 
-function post() {
-    let g = Math.floor(Math.random()*1200); p.fans += g;
-    addLog(`📱 Viralizou! +${g} fãs.`); closeMod();
+function flertar() {
+    let nomes = ["Julia", "Marcos", "Beatriz", "Ricardo", "Leticia"];
+    p.relacao = nomes[Math.floor(Math.random()*nomes.length)];
+    animar(`❤️ AMOR: ${p.relacao}!`);
+    closeMod();
 }
 
-function closeMod() { document.getElementById('modal').style.display = 'none'; updateUI(); }
+function closeMod() { document.getElementById('modal').style.display = 'none'; update(); }
 
-// Start
-updateUI();
-addLog("👋 Bem-vindo ao BitLife Brasil! Boa sorte na sua jornada.");
+iniciar();
 </script>
 </body>
 </html>
