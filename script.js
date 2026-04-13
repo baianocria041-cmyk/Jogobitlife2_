@@ -16,9 +16,23 @@ const DB = {
 };
 
 let p = {
-    mes: 0, ano: 0, grana: 50, edu: 0, fans: 0, 
-    job: null, path: "", level: -1, 
-    nasc: "", relacao: null
+    mes: 0, 
+    ano: 0, 
+    grana: 50, 
+    edu: 0, 
+    fans: 0, 
+    job: null, 
+    path: "", 
+    level: -1, 
+    nasc: "", 
+    relacao: null,
+    preso: false,    // Novo
+    pena: 0,         // Novo
+    gangue: "Nenhuma", // Novo
+    respeito: 0      // Novo
+};
+
+    
 };
 
 // Funções de Inicialização
@@ -37,23 +51,45 @@ function update() {
     document.getElementById('v-job').innerText = p.job ? p.job.n : "Sem Ocupação";
 }
 
+
 function passarMes() {
+    if (p.preso) {
+        p.mes++;
+        if (p.mes > 11) {
+            p.mes = 0;
+            p.ano++;
+            p.pena--; 
+            addLog(`⛓️ Mais um ano na tranca. Restam: ${p.pena} anos.`, "orange");
+        }
+
+        if (p.pena <= 0) {
+            p.preso = false;
+            flash("🕊️ LIBERDADE!");
+            addLog("Você pagou sua dívida com a sociedade.", "var(--primary)");
+        }
+        
+        update(); 
+        return;   
+    }
+
     p.mes++;
-    if(p.mes > 11) { p.mes = 0; p.ano++; flash(`🎂 ${p.ano} ANOS`); }
-    if(p.job) p.grana += (p.job.sal / 12);
-    if(p.fans > 100000) p.grana += (p.fans * 0.002);
+    if (p.mes > 11) {
+        p.mes = 0;
+        p.ano++;
+        flash(`🎂 ${p.ano} ANOS`);
+    }
+
+    if (p.job) {
+        p.grana += (p.job.sal / 12);
+    }
+
+    if (p.fans > 100000) {
+        p.grana += (p.fans * 0.002);
+    }
+
     update();
 }
 
-function passarMes() {
-if(p.preso) {
-    if(p.mes === 0) { // Uma vez por ano na cadeia
-        p.pena--;
-        if(p.pena <= 0) {
-            p.preso = false;
-            flash("🕊️ LIBERDADE! Sua pena acabou.");
-            addLog("Você saiu da detenção. Vida nova?");
-        }
     }
     update();
     return; // Impede que ganhe salário ou faça outras coisas
