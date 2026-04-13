@@ -8,238 +8,255 @@
         :root {
             --bg: #f8f9fa; --card: #ffffff; --primary: #27ae60;
             --secondary: #2980b9; --danger: #c0392b; --social: #e1306c;
-            --text: #2c3e50; --gold: #f1c40f;
+            --text: #2c3e50; --gold: #f1c40f; --accent: #9b59b6;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; overflow: hidden; color: var(--text); }
         #app { width: 100%; max-width: 450px; height: 100vh; margin: auto; display: flex; flex-direction: column; position: relative; background: var(--bg); }
 
-        /* Status Topo */
+        /* Status Topo Moderno */
         #header { 
             background: var(--primary); color: white; padding: 20px; 
             border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            text-align: center; transition: 0.5s;
+            text-align: center; transition: 0.5s; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        .stats-row { display: flex; justify-content: space-around; padding: 10px; font-size: 12px; }
-        .stat-box { background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 10px; }
+        .stats-row { display: flex; justify-content: space-around; padding: 10px; font-size: 11px; margin-top: 10px; }
+        .stat-box { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px; font-weight: bold; }
 
-        /* Log com Animação */
-        #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; }
+        /* Log de Acontecimentos */
+        #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 10px; }
         .log-item { 
-            background: white; padding: 12px; border-radius: 15px; margin-bottom: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-left: 5px solid var(--primary);
+            background: white; padding: 14px; border-radius: 18px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05); animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 6px solid var(--primary); font-size: 14px;
         }
 
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* Barra de Ações */
+        /* Barra de Ações Inferior */
         .actions { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 15px; 
-            background: white; border-top: 1px solid #ddd;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; 
+            background: white; border-top-left-radius: 30px; border-top-right-radius: 30px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
         }
-        button { border: none; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-age { grid-column: span 4; background: var(--primary); height: 55px; font-size: 18px; margin-bottom: 5px; }
+        button { border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 12px; }
+        .btn-age { grid-column: span 4; background: var(--primary); height: 60px; font-size: 20px; margin-bottom: 5px; box-shadow: 0 4px 0 #1e8449; }
+        .btn-age:active { transform: translateY(3px); box-shadow: none; }
         
-        /* Overlays */
+        /* Overlays / Menus */
         .overlay { 
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg); z-index: 100; flex-direction: column; padding: 20px; box-sizing: border-box;
+            background: var(--bg); z-index: 100; flex-direction: column; padding: 25px; box-sizing: border-box;
         }
         .item-card { 
-            background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: white; padding: 15px; border-radius: 18px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        /* Animação de Sucesso (Overlay) */
         #achievement {
-            display: none; position: absolute; top: 30%; left: 10%; width: 80%;
-            background: var(--gold); color: black; padding: 20px; border-radius: 20px;
-            text-align: center; z-index: 1000; font-weight: bold; box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            animation: bounce 0.6s infinite alternate;
+            display: none; position: absolute; top: 25%; left: 10%; width: 80%;
+            background: var(--gold); color: #000; padding: 25px; border-radius: 25px;
+            text-align: center; z-index: 1000; font-weight: bold; border: 4px solid #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: bounce 0.6s infinite alternate;
         }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
-
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <div id="achievement" id="ach-text">✨ CONQUISTA! ✨</div>
+    <div id="achievement">✨ CONQUISTA! ✨</div>
 
     <div id="header">
-        <div id="v-job" style="font-size: 20px; font-weight: bold;">Estudante</div>
-        <div id="v-money" style="font-size: 24px;">R$ 50</div>
+        <div id="v-job" style="font-size: 22px; font-weight: bold;">Desempregado</div>
+        <div id="v-money" style="font-size: 28px; font-weight: 900; margin: 5px 0;">R$ 50</div>
         <div class="stats-row">
             <div class="stat-box">📅 <span id="v-date">Jan, 0 anos</span></div>
             <div class="stat-box">🎓 Edu: <span id="v-edu">0</span></div>
-            <div class="stat-box">📱 Fans: <span id="v-fans">0</span></div>
+            <div class="stat-box">📱 <span id="v-fans">0</span> fãs</div>
         </div>
     </div>
 
     <div id="log"></div>
 
     <div id="modal" class="overlay">
-        <h2 id="m-title">Menu</h2>
-        <div id="m-content" style="flex:1; overflow-y:auto;"></div>
-        <button onclick="fechar()" style="background:#333; padding:15px; margin-top:10px; width:100%;">VOLTAR</button>
+        <h2 id="m-title" style="text-align: center; font-size: 24px;">Menu</h2>
+        <div id="m-content" style="flex:1; overflow-y:auto; padding: 5px;"></div>
+        <button onclick="fechar()" style="background:#333; padding:18px; border-radius: 20px; font-size:16px; width:100%;">VOLTAR</button>
     </div>
 
     <div class="actions">
-        <button class="btn-age" onclick="passarMes()">+ PRÓXIMO MÊS</button>
-        <button style="background: var(--secondary)" onclick="abrir('carreira')">💼 Carreira</button>
-        <button style="background: #9b59b6" onclick="abrir('faculdade')">🎓 Estudar</button>
+        <button class="btn-age" onclick="passarMes()">PRÓXIMO MÊS</button>
+        <button style="background: var(--secondary)" onclick="abrir('jobs')">💼 Vagas</button>
+        <button style="background: #16a085" onclick="abrir('bicos')">💸 Bicos</button>
         <button style="background: var(--social)" onclick="abrir('social')">📱 Social</button>
-        <button style="background: #e67e22" onclick="abrir('relacionamento')">❤️ Amor</button>
+        <button style="background: var(--accent)" onclick="abrir('facu')">🎓 Estudar</button>
     </div>
 </div>
 
 <script>
-    const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    let p = {
-        mes: 0, ano: 0, money: 50, job: null, edu: 0, fans: 0, 
-        faculdade: null, cursoProgresso: 0, 
-        relacao: null, faltas: 0, famoso: false
-    };
+// --- BANCO DE DADOS INTEGRADO ---
+const DB = {
+    empregos: [
+        { "n": "Panfleteiro", "s": 1300, "a": 14, "e": 0 },
+        { "n": "Lavador de Carros", "s": 1500, "a": 15, "e": 0 },
+        { "n": "Garçom", "s": 2200, "a": 18, "e": 0 },
+        { "n": "Motoboy", "s": 3000, "a": 18, "e": 0 },
+        { "n": "Vendedor", "s": 2500, "a": 18, "e": 1 },
+        { "n": "Técnico de TI", "s": 4500, "a": 19, "e": 2 },
+        { "n": "Professor", "s": 5200, "a": 22, "e": 3 },
+        { "n": "Advogado", "s": 8500, "a": 23, "e": 3 },
+        { "n": "Engenheiro", "s": 11000, "a": 24, "e": 4 },
+        { "n": "Médico", "s": 22000, "a": 26, "e": 4 },
+        { "n": "Astronauta", "s": 75000, "a": 30, "e": 5 },
+        { "n": "CEO Global", "s": 150000, "a": 35, "e": 5 }
+        // Adicionei os principais, o sistema aceita quantos você quiser!
+    ],
+    bicos: [
+        { n: "Passear com Cães", g: 60 },
+        { n: "Lavar Louça", g: 100 },
+        { n: "Formatar PC", g: 180 },
+        { n: "Vender Brigadeiro", g: 120 }
+    ],
+    eventosTrabalho: [
+        { msg: "O chefe não gostou da sua pontualidade.", tipo: "bad", efeito: "falta" },
+        { msg: "Você entregou um projeto excelente!", tipo: "good", efeito: "dinheiro" },
+        { msg: "O patrão reclamou do seu desempenho.", tipo: "bad", efeito: "falta" },
+        { msg: "Você ajudou um colega e foi elogiado.", tipo: "good", efeito: "bonus" }
+    ],
+    cursos: [
+        { n: "Administração", t: 48, e: 2, c: 800 },
+        { n: "Direito", t: 60, e: 3, c: 1500 },
+        { n: "Engenharia", t: 60, e: 4, c: 2000 },
+        { n: "Medicina", t: 72, e: 5, c: 4000 }
+    ]
+};
 
-    const DB = {
-        cursos: [
-            { n: "Direito", t: 60, e: 3, s: 8000 }, // 60 meses = 5 anos
-            { n: "Medicina", t: 72, e: 5, s: 15000 },
-            { n: "Engenharia", t: 60, e: 3, s: 7000 }
-        ],
-        famosos: ["Neymar", "Anitta", "Whindersson", "Virginia", "Felipe Neto"]
-    };
+// --- LÓGICA DO JOGO ---
+let p = {
+    mes: 0, ano: 0, money: 50, job: null, edu: 0, fans: 0, 
+    faculdade: null, cursoProgresso: 0, faltas: 0, preso: 0
+};
 
-    function update() {
-        document.getElementById('v-money').innerText = "R$ " + Math.floor(p.money).toLocaleString();
-        document.getElementById('v-job').innerText = p.job ? p.job.n : (p.faculdade ? "Cursando " + p.faculdade.n : "Desempregado");
-        document.getElementById('v-date').innerText = `${MESES[p.mes]}, ${p.ano} anos`;
-        document.getElementById('v-edu').innerText = p.edu;
-        document.getElementById('v-fans').innerText = p.fans >= 1000000 ? (p.fans/1000000).toFixed(1) + "M" : p.fans.toLocaleString();
-    }
+const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
-    function animar(texto) {
-        const div = document.getElementById('achievement');
-        div.innerText = texto;
-        div.style.display = 'block';
-        setTimeout(() => div.style.display = 'none', 2500);
-    }
+function update() {
+    document.getElementById('v-money').innerText = "R$ " + Math.floor(p.money).toLocaleString();
+    document.getElementById('v-age').innerText = p.ano;
+    document.getElementById('v-edu').innerText = p.edu;
+    document.getElementById('v-fans').innerText = p.fans >= 1000000 ? (p.fans/1000000).toFixed(1) + "M" : p.fans.toLocaleString();
+    document.getElementById('v-date').innerText = `${MESES[p.mes]}, ${p.ano} anos`;
+    
+    const jDisplay = document.getElementById('v-job');
+    jDisplay.innerText = p.job ? p.job.n : (p.faculdade ? "Estudante" : "Desempregado");
+}
 
-    function addLog(m, c="var(--primary)") {
-        const l = document.getElementById('log');
-        l.innerHTML += `<div class="log-item" style="border-left-color:${c}">${m}</div>`;
-    }
+function addLog(msg, cor = "var(--primary)") {
+    const log = document.getElementById('log');
+    log.innerHTML += `<div class="log-item" style="border-left-color:${cor}">${msg}</div>`;
+}
 
-    function passarMes() {
-        p.mes++;
-        if(p.mes > 11) { p.mes = 0; p.ano++; addLog(`🎈 Feliz aniversário de ${p.ano} anos!`, "var(--gold)"); }
+function animar(texto) {
+    const div = document.getElementById('achievement');
+    div.innerText = texto; div.style.display = 'block';
+    setTimeout(() => div.style.display = 'none', 2500);
+}
 
-        // Salário e Faltas
-        if(p.job) {
-            if(Math.random() < 0.05) { // 5% chance de dar problema se faltar
+function passarMes() {
+    p.mes++;
+    if(p.mes > 11) { p.mes = 0; p.ano++; addLog(`🎈 Feliz aniversário de ${p.ano} anos!`, "var(--gold)"); }
+
+    // Salário e Eventos do Dia a Dia
+    if(p.job) {
+        if(Math.random() < 0.25) { 
+            let ev = DB.eventosTrabalho[Math.floor(Math.random() * DB.eventosTrabalho.length)];
+            let cor = ev.tipo === "good" ? "var(--primary)" : "var(--danger)";
+            addLog(`💼 TRABALHO: ${ev.msg}`, cor);
+
+            if(ev.efeito === "falta") {
                 p.faltas++;
-                addLog("⚠️ Você faltou ao trabalho para descansar.", "orange");
-                if(p.faltas > 3) { p.job = null; p.faltas = 0; addLog("🚫 VOCÊ FOI DEMITIDO POR FALTAS!", "red"); }
-            } else {
-                let sal = p.job.s / 12;
-                p.money += sal;
-            }
+                if(p.faltas >= 3) { addLog("🚫 DEMITIDO POR MAU DESEMPENHO!", "red"); p.job = null; p.faltas = 0; }
+            } else if(ev.efeito === "dinheiro") { p.money += 300; addLog("💸 Bônus recebido: +R$ 300"); }
         }
+        if(p.job) p.money += (p.job.s / 12);
+    }
 
-        // Faculdade
-        if(p.faculdade) {
+    // Progresso Acadêmico
+    if(p.faculdade) {
+        if(p.money >= p.faculdade.c) {
+            p.money -= p.faculdade.c;
             p.cursoProgresso++;
             if(p.cursoProgresso >= p.faculdade.t) {
                 p.edu += p.faculdade.e;
                 animar(`🎓 FORMADO EM ${p.faculdade.n.toUpperCase()}!`);
-                addLog(`🎓 Parabéns! Você concluiu ${p.faculdade.n}.`, "var(--secondary)");
                 p.faculdade = null;
             }
-        }
-
-        // Monetização Redes Sociais
-        if(p.fans > 50000) {
-            let ganhoSocial = (p.fans * 0.002);
-            p.money += ganhoSocial;
-            if(p.mes === 0) addLog(`📱 Adsense: R$ ${ganhoSocial.toFixed(0)} das redes sociais.`, "var(--social)");
-        }
-
-        update();
-    }
-
-    function abrir(tipo) {
-        const mod = document.getElementById('modal');
-        const cont = document.getElementById('m-content');
-        cont.innerHTML = ""; mod.style.display = 'flex';
-
-        if(tipo === 'carreira') {
-            document.getElementById('m-title').innerText = "Empregos & Famas";
-            cont.innerHTML = `
-                <div class="item-card"><b>Vira-Lata Digital</b><button onclick="virarPro('Digital')">Começar</button></div>
-                <div class="item-card"><b>Jogador de Futebol</b><button onclick="virarPro('Atleta')">Treinar</button></div>
-                <div class="item-card"><b>Cantor Sertanejo</b><button onclick="virarPro('Cantor')">Cantar</button></div>
-            `;
-        } else if(tipo === 'social') {
-            document.getElementById('m-title').innerText = "Redes Sociais";
-            cont.innerHTML = `
-                <div class="item-card"><span>Postar Foto</span><button onclick="postar('foto')">Postar</button></div>
-                <div class="item-card"><span>Interagir com ${DB.famosos[Math.floor(Math.random()*5)]}</span><button onclick="postar('famoso')">Marcar</button></div>
-            `;
-        } else if(tipo === 'faculdade') {
-            document.getElementById('m-title').innerText = "Universidade";
-            DB.cursos.forEach(c => {
-                cont.innerHTML += `<div class="item-card"><b>${c.n}</b><button onclick="entrarFacu('${c.n}')">Entrar</button></div>`;
-            });
-        } else if(tipo === 'relacionamento') {
-            document.getElementById('m-title').innerText = "Relacionamentos";
-            if(!p.relacao) cont.innerHTML = `<button class="btn-age" style="background:var(--social)" onclick="paquerar()">Procurar Alguém no Tinder</button>`;
-            else {
-                cont.innerHTML = `<h3>❤️ ${p.relacao.nome}</h3>
-                <button class="btn-age" onclick="interagir('flertar')">Flertar</button>
-                <button class="btn-age" style="background:var(--secondary)" onclick="interagir('sair')">Sair para Jantar</button>
-                <button class="btn-age" style="background:#000" onclick="interagir('dormir')">Dormir Juntos</button>`;
-            }
+        } else {
+            addLog("⚠️ Você não teve dinheiro para a mensalidade este mês!", "orange");
         }
     }
-
-    function entrarFacu(nome) {
-        let c = DB.cursos.find(x => x.n === nome);
-        p.faculdade = c; p.cursoProgresso = 0;
-        animar("📖 MATRICULADO!");
-        fechar();
-    }
-
-    function postar(t) {
-        let ganho = t === 'foto' ? Math.floor(Math.random()*500) : Math.floor(Math.random()*5000);
-        p.fans += ganho;
-        addLog(`📸 Post viralizou! +${ganho} seguidores.`, "var(--social)");
-        if(p.fans > 1000000 && !p.famoso) { p.famoso = true; animar("🌟 VOCÊ FICOU FAMOSO!"); }
-        fechar();
-    }
-
-    function paquerar() {
-        p.relacao = { nome: "Jade", amor: 50 };
-        addLog("💘 Você começou a namorar Jade!");
-        fechar();
-    }
-
-    function interagir(acao) {
-        if(acao === 'dormir') addLog("🌙 Vocês passaram a noite juntos...", "#333");
-        else addLog(`❤️ Você decidiu ${acao} com seu par.`);
-        fechar();
-    }
-
-    function virarPro(area) {
-        animar(`🎬 CARREIRA DE ${area.toUpperCase()}`);
-        p.job = { n: area + " Pro", s: 50000 };
-        fechar();
-    }
-
-    function fechar() { document.getElementById('modal').style.display = 'none'; update(); }
-
     update();
+}
+
+function abrir(tipo) {
+    const cont = document.getElementById('m-content');
+    cont.innerHTML = ""; document.getElementById('modal').style.display = 'flex';
+
+    if(tipo === 'jobs') {
+        document.getElementById('m-title').innerText = "Vagas";
+        DB.empregos.forEach(j => {
+            let pode = (p.edu >= j.e && p.ano >= j.a);
+            cont.innerHTML += `<div class="item-card">
+                <div><b>${j.n}</b><br><small>R$ ${j.s}/ano</small></div>
+                <button style="background:${pode ? 'var(--primary)':'#ccc'}; padding:10px" onclick="contratar('${j.n}')">ENTRAR</button>
+            </div>`;
+        });
+    } else if(tipo === 'bicos') {
+        document.getElementById('m-title').innerText = "Bicos Rápidos";
+        DB.bicos.forEach(b => {
+            cont.innerHTML += `<div class="item-card">
+                <div><b>${b.n}</b><br><small>Paga: R$ ${b.g}</small></div>
+                <button style="background:var(--primary); padding:10px" onclick="fazerBico('${b.n}')">FAZER</button>
+            </div>`;
+        });
+    } else if(tipo === 'facu') {
+        document.getElementById('m-title').innerText = "Faculdade";
+        DB.cursos.forEach(c => {
+            cont.innerHTML += `<div class="item-card">
+                <div><b>${c.n}</b><br><small>R$ ${c.c}/mês</small></div>
+                <button style="background:var(--accent); padding:10px" onclick="entrarFacu('${c.n}')">CURSAR</button>
+            </div>`;
+        });
+    } else if(tipo === 'social') {
+        document.getElementById('m-title').innerText = "Social";
+        cont.innerHTML = `<button class="btn-age" style="background:var(--social); width:100%" onclick="postar()">POSTAR FOTO</button>`;
+    }
+}
+
+function contratar(n) {
+    let j = DB.empregos.find(x => x.n === n);
+    if(p.edu >= j.e && p.ano >= j.a) { p.job = j; p.faltas = 0; animar("💼 CONTRATADO!"); fechar(); }
+    else { alert("Sem requisitos!"); }
+}
+
+function entrarFacu(n) {
+    p.faculdade = DB.cursos.find(x => x.n === n);
+    p.cursoProgresso = 0; animar("📖 MATRICULADO!"); fechar();
+}
+
+function fazerBico(n) {
+    let b = DB.bicos.find(x => x.n === n);
+    p.money += b.g; addLog(`💸 Bico: ${b.n} +R$ ${b.g}`); fechar();
+}
+
+function postar() {
+    let g = Math.floor(Math.random() * 800); p.fans += g;
+    addLog(`📱 Post rendeu ${g} fãs!`, "var(--social)"); fechar();
+}
+
+function fechar() { document.getElementById('modal').style.display = 'none'; update(); }
+update();
 </script>
 </body>
 </html>
