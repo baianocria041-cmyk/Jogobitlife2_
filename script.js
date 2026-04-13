@@ -1,4 +1,4 @@
-// --- ESTADO INICIAL DO JOGADOR ---
+// --- 1. ESTADO INICIAL DO JOGADOR ---
 let p = {
     mes: 0, 
     ano: 0, 
@@ -9,40 +9,59 @@ let p = {
     path: "", 
     level: -1, 
     nasc: "", 
-    relacao: null,
     preso: false,    
     pena: 0,         
     gangue: "Nenhuma", 
     respeito: 0,
     social: {
-        yt: { inscritos: 0, videos: 0, prata: false },
-        tt: { seguidores: 0, dancinhas: 0 },
-        fb: { amigos: 0, posts: 0 }
+        yt: { inscritos: 0, prata: false },
+        tt: { seguidores: 0 },
+        fb: { amigos: 0 }
     }
 };
 
-// --- BANCO DE DADOS ---
+// --- 2. BANCO DE DADOS (CARREIRAS E CRIMES) ---
 const DB = {
     futebol: [
         {n: "Escolinha do Bairro", sal: 0, a: 7, f: 0, e: 0},
-        {n: "Base do Clube", sal: 1200, a: 13, f: 1000, e: 0},
-        {n: "Profissional", sal: 8000, a: 17, f: 20000, e: 0},
-        {n: "Craque da Série A", sal: 95000, a: 19, f: 250000, e: 0}
+        {n: "Base de Clube Grande", sal: 1500, a: 13, f: 5000, e: 0},
+        {n: "Reserva Profissional", sal: 8000, a: 17, f: 50000, e: 0},
+        {n: "Titular Série A", sal: 120000, a: 19, f: 500000, e: 0},
+        {n: "Seleção / Europa", sal: 2500000, a: 21, f: 10000000, e: 0}
+    ],
+    artista: [
+        {n: "Teatro de Rua", sal: 200, a: 10, f: 100, e: 0},
+        {n: "Ator de Comercial", sal: 3000, a: 16, f: 10000, e: 1},
+        {n: "Elenco de Apoio", sal: 12000, a: 18, f: 200000, e: 2},
+        {n: "Protagonista", sal: 90000, a: 22, f: 2000000, e: 5},
+        {n: "Estrela Global", sal: 5000000, a: 25, f: 50000000, e: 10}
     ],
     medicina: [
         {n: "Faculdade Medicina", sal: -3500, a: 18, f: 0, e: 5},
-        {n: "Neurocirurgião", sal: 120000, a: 30, f: 0, e: 20}
+        {n: "Residente", sal: 5000, a: 24, f: 0, e: 8},
+        {n: "Médico Geral", sal: 15000, a: 26, f: 0, e: 10},
+        {n: "Especialista", sal: 45000, a: 30, f: 1000, e: 15},
+        {n: "Neurocirurgião", sal: 120000, a: 35, f: 5000, e: 20}
     ],
     abobora: [
         {n: "Pequenos Furtos", ganho: 500, risco: 20},
-        {n: "Assalto a Banco", ganho: 50000, risco: 60}
+        {n: "Assalto a Banco", ganho: 50000, risco: 65}
     ]
 };
 
-// --- MOTOR DO JOGO ---
+// --- 3. MOTOR DO JOGO (PASSAR MÊS) ---
 function passarMes() {
+    p.mes++;
+    
+    // Perda orgânica de seguidores (Realismo)
+    if (p.fans > 500) {
+        let perda = Math.floor(p.fans * 0.01);
+        p.social.yt.inscritos = Math.max(0, p.social.yt.inscritos - Math.floor(perda/2));
+        p.social.tt.seguidores = Math.max(0, p.social.tt.seguidores - Math.floor(perda/2));
+        p.fans = p.social.yt.inscritos + p.social.tt.seguidores + p.social.fb.amigos;
+    }
+
     if (p.preso) {
-        p.mes++;
         if (p.mes > 11) {
             p.mes = 0; p.ano++; p.pena--; 
             addLog(`⛓️ Mais um ano na tranca. Restam: ${p.pena} anos.`, "orange");
@@ -55,20 +74,30 @@ function passarMes() {
         update(); return;   
     }
 
-    p.mes++;
     if (p.mes > 11) { p.mes = 0; p.ano++; flash(`🎂 ${p.ano} ANOS`); }
 
-    if (p.job) p.grana += (p.job.sal / 12);
-    if (p.fans > 100000) p.grana += (p.fans * 0.002);
-
+    // Salário e Fama
+    if (p.job) {
+        p.grana += (p.job.sal / 12);
+        // Risco de demissão por flop (Carreiras de Fama)
+        if (p.path === 'futebol' || p.path === 'artista') {
+            let req = DB[p.path][p.level].f;
+            if (p.fans < req * 0.7 && p.level > 0 && Math.random() > 0.8) {
+                addLog("📉 Você foi demitido por estar em baixa!", "var(--danger)");
+                p.job = null; p.path = ""; p.level = -1;
+            }
+        }
+    }
+    
     update();
 }
 
+// --- 4. INTERFACE E MENUS ---
 function iniciar() {
     p.nasc = `${Math.floor(Math.random()*28)+1}/${Math.floor(Math.random()*12)+1}/2026`;
     const birthEl = document.getElementById('v-birth');
-    if(birthEl) birthEl.innerText = `DNA REGISTRADO: ${p.nasc}`;
-    addLog("🧬 Bem-vindo ao mundo.");
+    if(birthEl) birthEl.innerText = `DNA: ${p.nasc}`;
+    addLog("🧬 Bem-vindo ao BitLife Brasil.");
     update();
 }
 
@@ -80,118 +109,99 @@ function update() {
     document.getElementById('v-job').innerText = p.job ? p.job.n : (p.preso ? "Detento" : "Sem Ocupação");
 }
 
-// --- MENUS ---
 function abrir(m) {
     const modal = document.getElementById('modal');
     const c = document.getElementById('m-content');
     if(!modal || !c) return;
-
-    c.innerHTML = ""; 
-    modal.style.display = 'flex';
+    c.innerHTML = ""; modal.style.display = 'flex';
     document.getElementById('m-title').innerText = m.toUpperCase();
 
-    if (p.preso) {
-        renderCadeia(c); return;
-    }
+    if (p.preso) { renderCadeia(c); return; }
 
     if(m === 'jobs') {
-        renderJobSection(c, "Futebol ⚽", DB.futebol, 'futebol');
-        renderJobSection(c, "Medicina 🏥", DB.medicina, 'medicina');
-    } else if(m === 'life') {
-        c.innerHTML = `<button class="btn-age" style="background:var(--danger); width:100%" onclick="tentarAbobora()">🎃 TENTAR ABÓBORA</button>`;
-    } else if(m === 'social') {
-        renderSocial(c);
-    } else if(m === 'edu') {
-        c.innerHTML = `<button class="btn-age" style="background:var(--accent); width:100%" onclick="estudar()">📚 ESTUDAR (+1 INT)</button>`;
+        c.innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+                <button class="btn-menu sec" style="padding:15px;" onclick="renderSubMenu('comum')">🛠️ Comuns</button>
+                <button class="btn-menu acc" style="padding:15px; background:var(--gold); color:#000;" onclick="renderSubMenu('fama')">🌟 Profissional</button>
+            </div>
+            <div id="sub-job-content"><p style="text-align:center; opacity:0.5;">Escolha uma categoria</p></div>`;
+    } else if(m === 'social') { renderSocial(c);
+    } else if(m === 'life') { c.innerHTML = `<button class="btn-age" style="background:var(--danger); width:100%" onclick="tentarAbobora()">🎃 TENTAR ABÓBORA</button>`;
+    } else if(m === 'edu') { c.innerHTML = `<button class="btn-age acc" style="width:100%" onclick="estudar()">📚 ESTUDAR (+1 INT)</button>`; }
+}
+
+function renderSubMenu(tipo) {
+    const container = document.getElementById('sub-job-content');
+    container.innerHTML = "";
+    if (tipo === 'fama') {
+        renderJobSection(container, "Atleta ⚽", DB.futebol, 'futebol');
+        renderJobSection(container, "Artista 🎭", DB.artista, 'artista');
+    } else {
+        renderJobSection(container, "Medicina 🏥", DB.medicina, 'medicina');
+    }
+}
+
+function renderJobSection(cont, titulo, dados, path) {
+    cont.innerHTML += `<h3 style='margin:10px 0; font-size:14px; color:var(--primary)'>${titulo}</h3>`;
+    let prox = (p.path === path) ? p.level + 1 : 0;
+    let j = dados[prox];
+    if (j) {
+        let pode = p.ano >= j.a && p.fans >= j.f && p.edu >= j.e;
+        cont.innerHTML += `<div class="card" style="flex-direction:column; align-items:flex-start; gap:5px;">
+            <div style="width:100%; display:flex; justify-content:space-between;"><b>${j.n}</b> <span>R$ ${j.sal}</span></div>
+            <small style="font-size:9px; color:#aaa">Req: ${j.a} anos | ${j.f.toLocaleString()} fãs | ${j.e} edu</small>
+            <button class="btn-menu" style="width:100%; background:${pode?'var(--primary)':'#333'}" onclick="${pode?`setJob('${path}',${prox})`:`flash('Bloqueado')`}">CONTRATAR</button>
+        </div>`;
     }
 }
 
 function renderSocial(cont) {
     cont.innerHTML = `
-        <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
-            <b style="color:#ff0000">🎥 YOUTUBE</b>
-            <p style="font-size:11px">Inscritos: ${p.social.yt.inscritos.toLocaleString()}</p>
-            <button class="btn-age" style="background:#ff0000; width:100%; padding:10px; font-size:12px;" onclick="postarRede('yt')">Gravar Vlog</button>
+        <div class="card" style="flex-direction:column; gap:10px;">
+            <b>🎥 YOUTUBE: ${p.social.yt.inscritos.toLocaleString()}</b>
+            <button class="btn-age" style="background:#ff0000; width:100%" onclick="postarRede('yt')">Gravar Vlog</button>
         </div>
-        <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
-            <b style="color:#00f2ea">🎵 TIKTOK</b>
-            <p style="font-size:11px">Seguidores: ${p.social.tt.seguidores.toLocaleString()}</p>
-            <button class="btn-age" style="background:#000; width:100%; padding:10px; font-size:12px; border:1px solid #ff0050" onclick="postarRede('tt')">Fazer Dancinha</button>
+        <div class="card" style="flex-direction:column; gap:10px;">
+            <b>🎵 TIKTOK: ${p.social.tt.seguidores.toLocaleString()}</b>
+            <button class="btn-age" style="background:#000; width:100%; border:1px solid #ff0050" onclick="postarRede('tt')">Dancinha</button>
         </div>
-        <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
-            <b style="color:#1877f2">👥 FACEBOOK</b>
-            <p style="font-size:11px">Amigos: ${p.social.fb.amigos.toLocaleString()}</p>
-            <button class="btn-age" style="background:#1877f2; width:100%; padding:10px; font-size:12px;" onclick="postarRede('fb')">Atualizar Status</button>
-        </div>
-    `;
-}
-
-function renderJobSection(cont, titulo, dados, path) {
-    cont.innerHTML += `<h3 style='margin:10px 0'>${titulo}</h3>`;
-    let proxNivel = (p.path === path) ? p.level + 1 : 0;
-    let j = dados[proxNivel];
-    if(j) {
-        let ok = (p.ano >= j.a && p.fans >= j.f && p.edu >= j.e);
-        cont.innerHTML += `<div class="card">
-            <div><b>${j.n}</b><br><small>R$ ${j.sal}/mês</small></div>
-            <button style="background:${ok?'var(--primary)':'#444'}; padding:10px" onclick="setJob('${path}', ${proxNivel})">CONTRATAR</button>
+        <div class="card" style="flex-direction:column; gap:10px;">
+            <b>👥 FACEBOOK: ${p.social.fb.amigos.toLocaleString()}</b>
+            <button class="btn-age" style="background:#1877f2; width:100%" onclick="postarRede('fb')">Postar</button>
         </div>`;
-    }
 }
 
-function renderCadeia(cont) {
-    cont.innerHTML = `
-        <div class="card"><b>Pena restante:</b> ${p.pena} anos</div>
-        <button class="btn-age" style="background:#e67e22; width:100%" onclick="trabalharCadeia()">🧺 Lavanderia (+Respeito)</button>
-        <button class="btn-age" style="background:#c0392b; width:100%; margin-top:10px" onclick="tentarFuga()">🏃 Tentar Fuga</button>
-    `;
-}
-
-// --- AÇÕES ---
+// --- 5. AÇÕES ---
 function postarRede(rede) {
-    let ganho = 0;
+    let sorte = Math.random() * 100; let ganho = 0; let msg = ""; let cor = "var(--social)";
     if (rede === 'yt') {
-        ganho = Math.floor(Math.random() * 2000) + 100;
-        p.social.yt.inscritos += ganho;
-        if(p.social.yt.inscritos > 100000 && !p.social.yt.prata) { p.social.yt.prata = true; flash("🥈 PLACA DE PRATA!"); }
+        if (sorte > 92) { ganho = Math.floor(Math.random()*4000); msg = "🔥 VIRAL! +"; }
+        else if (sorte > 40) { ganho = Math.floor(Math.random()*300); msg = "🎥 Vídeo: +"; }
+        else { ganho = -Math.floor(p.social.yt.inscritos*0.03 + 5); msg = "📉 Flop: -"; cor="var(--danger)"; }
+        p.social.yt.inscritos = Math.max(0, p.social.yt.inscritos + ganho);
     } else if (rede === 'tt') {
-        ganho = Math.floor(Math.random() * 8000);
-        p.social.tt.seguidores += ganho;
-    } else if (rede === 'fb') {
-        ganho = Math.floor(Math.random() * 50);
-        p.social.fb.amigos += ganho;
+        if (sorte > 85) { ganho = Math.floor(Math.random()*12000); msg = "🚀 TREND! +"; }
+        else { ganho = -Math.floor(p.social.tt.seguidores*0.05 + 10); msg = "❌ Flop: -"; cor="var(--danger)"; }
+        p.social.tt.seguidores = Math.max(0, p.social.tt.seguidores + ganho);
+    } else {
+        ganho = Math.floor(Math.random()*40) - 10; p.social.fb.amigos = Math.max(0, p.social.fb.amigos + ganho);
+        msg = ganho >= 0 ? "👥 Amigos: +" : "👥 Unfriend: -";
     }
-    p.fans += ganho;
-    addLog(`📱 Redes: +${ganho} alcance.`, "var(--social)");
-    closeMod();
+    p.fans = p.social.yt.inscritos + p.social.tt.seguidores + p.social.fb.amigos;
+    addLog(`${msg}${Math.abs(ganho)}`, cor); closeMod();
 }
 
 function tentarAbobora() {
     let a = DB.abobora[Math.floor(Math.random()*DB.abobora.length)];
-    if(Math.random()*100 > a.risco) {
-        p.grana += a.ganho; flash(`🎃 SUCESSO: +R$ ${a.ganho}`);
-    } else {
-        p.preso = true; p.pena = Math.floor(Math.random()*5)+2; p.job = null;
-        flash("🚓 RODOU!");
-    }
+    if(Math.random()*100 > a.risco) { p.grana += a.ganho; flash(`🎃 SUCESSO!`); }
+    else { p.preso = true; p.pena = Math.floor(Math.random()*5)+2; p.job = null; flash("🚓 RODOU!"); }
     closeMod();
 }
 
-function setJob(path, lvl) {
-    let j = DB[path][lvl];
-    p.path = path; p.level = lvl; p.job = j;
-    flash("💼 CARREIRA ATUALIZADA"); closeMod();
-}
-
-function trabalharCadeia() { p.respeito += 5; addLog("🧺 Respeito aumentado."); closeMod(); }
-function tentarFuga() { 
-    if(Math.random() > 0.9) { p.preso = false; flash("🔓 FUGIU!"); } 
-    else { p.pena += 1; flash("👮 Capturado!"); }
-    closeMod();
-}
-
-function estudar() { p.edu++; addLog("🧠 Estudo concluído."); closeMod(); }
-function flash(t) { const e = document.getElementById('pop-alert'); if(e) { e.innerText = t; e.style.display = 'block'; setTimeout(()=>e.style.display='none', 2000); } }
+function setJob(path, lvl) { p.path = path; p.level = lvl; p.job = DB[path][lvl]; flash("💼 CONTRATADO!"); closeMod(); }
+function estudar() { p.edu++; addLog("🧠 Você estudou."); closeMod(); }
+function renderCadeia(cont) { cont.innerHTML = `<div class="card">Pena: ${p.pena} anos</div><button class="btn-age" style="background:#e67e22; width:100%" onclick="p.respeito+=5;closeMod()">🧺 Trabalhar</button><button class="btn-age" style="background:#c0392b; width:100%; margin-top:10px" onclick="if(Math.random()>0.9){p.preso=false;flash('FUGIU!')}else{p.pena+=1;flash('Falhou!')};closeMod()">🏃 Fuga</button>`; }
+function flash(t) { const e = document.getElementById('pop-alert'); if(e) { e.innerText = t; e.style.display='block'; setTimeout(()=>e.style.display='none', 2000); } }
 function addLog(m, color="white") { const log = document.getElementById('log'); if(log) log.innerHTML += `<div class="log-entry" style="border-left-color:${color}">${m}</div>`; }
 function closeMod() { document.getElementById('modal').style.display = 'none'; update(); }
 
