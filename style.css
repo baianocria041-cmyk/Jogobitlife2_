@@ -32,6 +32,7 @@ button { border: none; border-radius: 18px; font-weight: bold; cursor: pointer; 
 .acc { background: var(--accent); }
 .soc { background: var(--social); }
 .dan { background: var(--danger); }
+.btn-presidio { background: #f39c12 !important; color: #000 !important; }
 
 .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; flex-direction: column; padding: 25px; }
 .card { background: var(--card); padding: 20px; border-radius: 22px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass); }
