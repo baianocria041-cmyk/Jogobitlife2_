@@ -29,12 +29,14 @@ const DB = {
     ],
     saude: [
         {n: "Cuidador", sal: 1800, a: 18, f: 0, e: 2},
+        {n: "Técnico Enfermagem", sal: 3200, a: 20, f: 0, e: 10},
         {n: "Enfermeiro", sal: 5500, a: 23, f: 0, e: 25},
         {n: "Médico Geral", sal: 15000, a: 26, f: 0, e: 60},
         {n: "Neurocirurgião", sal: 45000, a: 34, f: 5000, e: 100}
     ],
     justica: [
         {n: "Policial Militar", sal: 4500, a: 21, f: 0, e: 10},
+        {n: "Advogado Jr", sal: 4000, a: 23, f: 300, e: 45},
         {n: "Delegado", sal: 19000, a: 26, f: 0, e: 80},
         {n: "Juiz de Direito", sal: 35000, a: 30, f: 0, e: 150}
     ],
@@ -48,6 +50,7 @@ const DB = {
         {n: "Gari", sal: 2200, a: 18, f: 0, e: 0},
         {n: "Entregador", sal: 2500, a: 18, f: 0, e: 0},
         {n: "Cozinheiro", sal: 2800, a: 19, f: 0, e: 10},
+        {n: "Eletricista", sal: 3500, a: 20, f: 0, e: 15},
         {n: "Mestre Obras", sal: 6000, a: 30, f: 0, e: 25}
     ],
     comunicacao: [
@@ -65,7 +68,7 @@ const DB = {
     ]
 };
 
-// --- 3. MOTOR ---
+// --- 3. MOTOR DO JOGO ---
 function passarMes() {
     p.mes++;
     if (p.mes > 11) { p.mes = 0; p.ano++; flash(`🎂 ${p.ano} ANOS`); }
@@ -95,19 +98,24 @@ function update() {
     document.getElementById('v-job').innerText = p.job ? p.job.n : (p.preso ? "Detento" : "Sem Ocupação");
 }
 
-// --- 4. MENUS ---
+// --- 4. SISTEMA DE MENUS ---
 function abrir(m) {
     const c = document.getElementById('m-content');
     const modal = document.getElementById('modal');
     if(!c || !modal) return;
+    
     c.innerHTML = ""; modal.style.display = 'flex';
     document.getElementById('m-title').innerText = m.toUpperCase();
+
+    // Estilização para ROLAGEM (Scroll)
+    c.style.maxHeight = "70vh";
+    c.style.overflowY = "auto";
 
     if (p.preso) { renderCadeia(c); return; }
 
     if (m === 'jobs') {
         c.innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px; position: sticky; top: 0; background: #222; z-index: 10; padding-bottom: 10px;">
                 <button class="btn-menu sec" onclick="renderSubMenu('comum')">🛠️ COMUNS</button>
                 <button class="btn-menu acc" style="background:#ffd700; color:#000" onclick="renderSubMenu('fama')">🌟 CARREIRAS</button>
             </div>
@@ -119,7 +127,8 @@ function abrir(m) {
 
 function renderSubMenu(tipo) {
     const cont = document.getElementById('sub-job-content');
-    cont.innerHTML = `<button class="btn-menu" style="width:100%; margin-bottom:10px; background:#444" onclick="abrir('jobs')">⬅️ VOLTAR</button>`;
+    cont.innerHTML = `<button class="btn-menu" style="width:100%; margin-bottom:10px; background:#444; position: sticky; top: 50px; z-index: 9;" onclick="abrir('jobs')">⬅️ VOLTAR</button>`;
+    
     if (tipo === 'fama') {
         renderJobSection(cont, "Futebol ⚽", DB.futebol, 'futebol');
         renderJobSection(cont, "Artista 🎭", DB.artista, 'artista');
@@ -131,12 +140,12 @@ function renderSubMenu(tipo) {
 }
 
 function renderJobSection(cont, titulo, dados, path) {
-    cont.innerHTML += `<h3 style='margin:10px 0; font-size:12px; color:var(--primary)'>${titulo}</h3>`;
+    cont.innerHTML += `<h3 style='margin:15px 0 5px 0; font-size:12px; color:var(--primary)'>${titulo}</h3>`;
     let prox = (p.path === path) ? p.level + 1 : 0;
     let j = dados[prox];
     if (j) {
         let pode = p.ano >= j.a && p.fans >= j.f && p.edu >= j.e;
-        cont.innerHTML += `<div class="card" style="flex-direction:column; align-items:flex-start; padding:10px; margin-bottom:5px;">
+        cont.innerHTML += `<div class="card" style="flex-direction:column; align-items:flex-start; padding:10px; margin-bottom:8px;">
             <b>${j.n}</b> <small>R$ ${j.sal.toLocaleString()}</small>
             <button class="btn-menu" style="width:100%; margin-top:5px; background:${pode?'var(--primary)':'#333'}" onclick="${pode?`setJob('${path}',${prox})`:`flash('Bloqueado')`}">CONTRATAR</button>
         </div>`;
@@ -159,6 +168,7 @@ function renderSocial(cont) {
         </div>`;
 }
 
+// --- 5. AÇÕES ---
 function postarRede(rede) {
     let sorte = Math.random() * 100; let ganho = 0;
     if (rede === 'ig') {
