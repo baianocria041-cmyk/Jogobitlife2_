@@ -11,7 +11,7 @@ let p = {
     }
 };
 
-// --- 2. BANCO DE DADOS (CARREIRAS) ---
+// --- 2. BANCO DE DADOS ---
 const DB = {
     futebol: [
         {n: "Escolinha do Bairro", sal: 0, a: 7, f: 0, e: 0},
@@ -29,14 +29,12 @@ const DB = {
     ],
     saude: [
         {n: "Cuidador", sal: 1800, a: 18, f: 0, e: 2},
-        {n: "Técnico Enfermagem", sal: 3200, a: 20, f: 0, e: 10},
         {n: "Enfermeiro", sal: 5500, a: 23, f: 0, e: 25},
         {n: "Médico Geral", sal: 15000, a: 26, f: 0, e: 60},
         {n: "Neurocirurgião", sal: 45000, a: 34, f: 5000, e: 100}
     ],
     justica: [
         {n: "Policial Militar", sal: 4500, a: 21, f: 0, e: 10},
-        {n: "Advogado Jr", sal: 4000, a: 23, f: 300, e: 45},
         {n: "Delegado", sal: 19000, a: 26, f: 0, e: 80},
         {n: "Juiz de Direito", sal: 35000, a: 30, f: 0, e: 150}
     ],
@@ -67,18 +65,17 @@ const DB = {
     ]
 };
 
-// --- 3. MOTOR DO JOGO ---
+// --- 3. MOTOR ---
 function passarMes() {
     p.mes++;
     if (p.mes > 11) { p.mes = 0; p.ano++; flash(`🎂 ${p.ano} ANOS`); }
 
-    // Perda orgânica de seguidores
     if (p.fans > 500) {
         let perda = Math.floor(p.fans * 0.01);
         p.social.yt.inscritos = Math.max(0, p.social.yt.inscritos - Math.floor(perda/3));
         p.social.tt.seguidores = Math.max(0, p.social.tt.seguidores - Math.floor(perda/3));
         p.social.ig.seguidores = Math.max(0, p.social.ig.seguidores - Math.floor(perda/3));
-        atualizarFans();
+        p.fans = p.social.yt.inscritos + p.social.tt.seguidores + p.social.ig.seguidores;
     }
 
     if (p.preso) {
@@ -90,10 +87,6 @@ function passarMes() {
     update();
 }
 
-function atualizarFans() {
-    p.fans = (p.social.yt.inscritos || 0) + (p.social.tt.seguidores || 0) + (p.social.ig.seguidores || 0) + (p.social.fb.amigos || 0);
-}
-
 function update() {
     document.getElementById('v-money').innerText = "R$ " + Math.floor(p.grana).toLocaleString();
     document.getElementById('v-edu').innerText = p.edu;
@@ -102,7 +95,7 @@ function update() {
     document.getElementById('v-job').innerText = p.job ? p.job.n : (p.preso ? "Detento" : "Sem Ocupação");
 }
 
-// --- 4. MENUS COM BOTÃO VOLTAR ---
+// --- 4. MENUS ---
 function abrir(m) {
     const c = document.getElementById('m-content');
     const modal = document.getElementById('modal');
@@ -143,8 +136,8 @@ function renderJobSection(cont, titulo, dados, path) {
     let j = dados[prox];
     if (j) {
         let pode = p.ano >= j.a && p.fans >= j.f && p.edu >= j.e;
-        cont.innerHTML += `<div class="card" style="flex-direction:column; align-items:flex-start; font-size:12px; padding:10px; margin-bottom:5px;">
-            <b>${j.n}</b> <small>Salário: R$ ${j.sal.toLocaleString()}</small>
+        cont.innerHTML += `<div class="card" style="flex-direction:column; align-items:flex-start; padding:10px; margin-bottom:5px;">
+            <b>${j.n}</b> <small>R$ ${j.sal.toLocaleString()}</small>
             <button class="btn-menu" style="width:100%; margin-top:5px; background:${pode?'var(--primary)':'#333'}" onclick="${pode?`setJob('${path}',${prox})`:`flash('Bloqueado')`}">CONTRATAR</button>
         </div>`;
     }
@@ -166,7 +159,6 @@ function renderSocial(cont) {
         </div>`;
 }
 
-// --- 5. AÇÕES ---
 function postarRede(rede) {
     let sorte = Math.random() * 100; let ganho = 0;
     if (rede === 'ig') {
@@ -184,7 +176,7 @@ function postarRede(rede) {
         else ganho = -Math.floor(p.social.tt.seguidores * 0.08 + 10);
         p.social.tt.seguidores = Math.max(0, p.social.tt.seguidores + ganho);
     }
-    atualizarFans();
+    p.fans = p.social.ig.seguidores + p.social.yt.inscritos + p.social.tt.seguidores;
     addLog(`📱 Social: ${ganho >= 0 ? '+' : ''}${ganho}`, ganho >= 0 ? "var(--social)" : "var(--danger)");
     closeMod();
 }
