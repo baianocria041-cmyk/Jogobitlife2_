@@ -42,6 +42,64 @@ const DB = {
         {n: "Médico Geral", sal: 15000, a: 26, f: 0, e: 10},
         {n: "Especialista", sal: 45000, a: 30, f: 1000, e: 15},
         {n: "Neurocirurgião", sal: 120000, a: 35, f: 5000, e: 20}
+
+            // ÁREA: SAÚDE & BEM-ESTAR
+    saude: [
+        {n: "Cuidador de Idosos", sal: 1800, a: 18, f: 0, e: 2},
+        {n: "Técnico em Enfermagem", sal: 3200, a: 20, f: 0, e: 10},
+        {n: "Enfermeiro Padrão", sal: 5500, a: 23, f: 0, e: 25},
+        {n: "Fisioterapeuta", sal: 4800, a: 23, f: 200, e: 30},
+        {n: "Psicólogo Clínico", sal: 6000, a: 24, f: 1000, e: 40},
+        {n: "Médico Geral", sal: 15000, a: 26, f: 0, e: 60},
+        {n: "Neurocirurgião", sal: 45000, a: 34, f: 5000, e: 100}
+    ],
+    // ÁREA: SEGURANÇA & JUSTIÇA
+    justica: [
+        {n: "Segurança Patrimonial", sal: 2100, a: 21, f: 0, e: 2},
+        {n: "Policial Militar", sal: 4500, a: 21, f: 0, e: 10},
+        {n: "Investigador Civil", sal: 7000, a: 23, f: 0, e: 25},
+        {n: "Advogado Júnior", sal: 4000, a: 23, f: 300, e: 45},
+        {n: "Delegado de Polícia", sal: 19000, a: 26, f: 0, e: 80},
+        {n: "Promotor de Justiça", sal: 32000, a: 28, f: 0, e: 120},
+        {n: "Juiz de Direito", sal: 35000, a: 30, f: 0, e: 150}
+    ],
+    // ÁREA: TECNOLOGIA & ESCRITÓRIO
+    tech: [
+        {n: "Auxiliar Administrativo", sal: 1900, a: 18, f: 0, e: 5},
+        {n: "Suporte Técnico", sal: 2600, a: 18, f: 0, e: 15},
+        {n: "Analista de RH", sal: 4200, a: 22, f: 0, e: 30},
+        {n: "Programador Júnior", sal: 5500, a: 20, f: 500, e: 40},
+        {n: "Desenvolvedor Pleno", sal: 9000, a: 24, f: 1000, e: 70},
+        {n: "Arquiteto de Software", sal: 18000, a: 28, f: 2000, e: 110},
+        {n: "Diretor de Tecnologia (CTO)", sal: 35000, a: 35, f: 5000, e: 160}
+    ],
+    // ÁREA: TRABALHOS OPERACIONAIS & SERVIÇOS
+    operacional: [
+        {n: "Gari / Coletor", sal: 2200, a: 18, f: 0, e: 0},
+        {n: "Frentista", sal: 1900, a: 18, f: 0, e: 0},
+        {n: "Operador de Caixa", sal: 1750, a: 18, f: 0, e: 1},
+        {n: "Entregador de Aplicativo", sal: 2500, a: 18, f: 0, e: 0},
+        {n: "Cozinheiro", sal: 2800, a: 19, f: 0, e: 10},
+        {n: "Eletricista Predial", sal: 3500, a: 20, f: 0, e: 15},
+        {n: "Mestre de Obras", sal: 6000, a: 30, f: 0, e: 25}
+    ],
+    // ÁREA: TRANSPORTE & COMUNICAÇÃO
+    comunicacao: [
+        {n: "Motorista de Ônibus", sal: 3100, a: 25, f: 0, e: 5},
+        {n: "Vendedor Interno", sal: 2200, a: 18, f: 0, e: 5},
+        {n: "Jornalista Júnior", sal: 3500, a: 22, f: 2000, e: 40},
+        {n: "Radialista", sal: 4500, a: 22, f: 5000, e: 30},
+        {n: "Piloto de Avião Comercial", sal: 25000, a: 25, f: 1000, e: 90},
+        {n: "Gerente de Marketing", sal: 12000, a: 28, f: 10000, e: 70}
+    ],
+    // ÁREA: EDUCAÇÃO
+    educacao: [
+        {n: "Monitor de Creche", sal: 1600, a: 18, f: 0, e: 10},
+        {n: "Professor Ensino Básico", sal: 4200, a: 23, f: 0, e: 40},
+        {n: "Professor Universitário", sal: 11000, a: 28, f: 500, e: 90},
+        {n: "Diretor de Escola", sal: 8500, a: 35, f: 0, e: 70},
+        {n: "Reitor de Universidade", sal: 22000, a: 45, f: 1000, e: 150}
+    
     ],
     abobora: [
         {n: "Pequenos Furtos", ganho: 500, risco: 20},
