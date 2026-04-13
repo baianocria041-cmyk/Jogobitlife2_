@@ -43,7 +43,7 @@ function passarMes() {
     if(p.job) p.grana += (p.job.sal / 12);
     if(p.fans > 100000) p.grana += (p.fans * 0.002);
     update();
-    
+}
 function passarMes() {
 if(p.preso) {
     if(p.mes === 0) { // Uma vez por ano na cadeia
