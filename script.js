@@ -203,6 +203,28 @@ function flash(t) { const e = document.getElementById('pop-alert'); if(e){ e.inn
 function addLog(m, color="white") { const log = document.getElementById('log'); if(log) log.innerHTML += `<div class="log-entry" style="border-left-color:${color}">${m}</div>`; }
 function closeMod() { document.getElementById('modal').style.display = 'none'; update(); }
 function renderCadeia(cont) { cont.innerHTML = `<div class="card">Pena: ${p.pena} anos</div><button class="btn-age dan" onclick="closeMod()">⛓️ CUMPRIR PENA</button>`; }
+// FUNÇÃO PARA SALVAR O JOGO (Cria o arquivo de save na memória do celular)
+function salvarJogo() {
+    localStorage.setItem("bitlife_brazil_save", JSON.stringify(p));
+    flash("💾 JOGO SALVO!");
+}
+
+// FUNÇÃO PARA CARREGAR O JOGO
+function carregarJogo() {
+    const save = localStorage.getItem("bitlife_brazil_save");
+    if (save) {
+        p = JSON.parse(save);
+        update();
+        addLog("📂 Progresso carregado com sucesso.");
+    }
+}
+
+// Chame o carregarJogo logo que o script iniciar
+carregarJogo();
+
+// Salvar automaticamente a cada 1 ano de vida
+// No seu passarMes(), adicione:
+// if (p.mes === 0) salvarJogo();
 
 // INICIAR
 update();
