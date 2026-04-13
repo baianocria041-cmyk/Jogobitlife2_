@@ -85,9 +85,15 @@ function setJob(path, lvl) {
 function tentarAbobora() {
     let a = DB.abobora[Math.floor(Math.random()*DB.abobora.length)];
     if(Math.random()*100 > a.risco) {
-        p.grana += a.ganho; flash(`🎃 SUCESSO: +R$ ${a.ganho}`);
+        p.grana += a.ganho; 
+        flash(`🎃 SUCESSO: +R$ ${a.ganho}`);
+        p.respeito += 5;
     } else {
-        flash("🚓 FALHOU!"); p.grana -= (p.grana * 0.2);
+        p.preso = true;
+        p.pena = Math.floor(Math.random() * 5) + 2; // Pena de 2 a 7 anos
+        p.job = null;
+        flash("🚓 RODOU! Você foi levado para a Detenção.");
+        addLog(`⚖️ Sentença: ${p.pena} anos de reclusão.`, "var(--danger)");
     }
     closeMod();
 }
