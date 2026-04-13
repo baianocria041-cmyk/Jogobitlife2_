@@ -21,7 +21,30 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); height: 100vh; c
 #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 12px; padding-bottom: 150px; }
 .log-entry { background: var(--card); padding: 16px; border-radius: 20px; font-size: 14px; border-left: 4px solid var(--primary); animation: slideIn 0.4s ease; }
 
-.nav-container { position: absolute; bottom: 0; width: 100%; background: rgba(10, 10, 10, 0.8); padding: 20px; border-top: 1px solid var(--glass); backdrop-filter: blur(20px); z-index: 99; }
+.nav-container { 
+    position: fixed; /* Mudamos de absolute para fixed */
+    bottom: 0; 
+    left: 0;
+    right: 0;
+    width: 100%; 
+    background: rgba(10, 10, 10, 0.95); 
+    padding: 15px; 
+    border-top: 1px solid var(--glass); 
+    backdrop-filter: blur(15px); 
+    z-index: 999; /* Aumentamos para ficar acima de tudo */
+}
+
+/* Ajuste no Log para ele não "bater" nos botões */
+#log { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column-reverse; 
+    gap: 12px; 
+    margin-bottom: 160px; /* Criamos um espaço fixo no fundo */
+}
+
 .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
 button { border: none; border-radius: 18px; font-weight: bold; cursor: pointer; color: white; transition: 0.3s; }
