@@ -152,6 +152,15 @@ function trabalharLavanderia() {
     addLog("🧺 Você trabalhou e ganhou respeito entre os detentos.");
     closeMod();
 
+    function abrir(m) {
+    if(p.preso) {
+        menuCadeia();
+        document.getElementById('modal').style.display = 'flex';
+        return;
+    }
+    // ... resto do seu código original da função abrir()
+
+
 
 }
 
