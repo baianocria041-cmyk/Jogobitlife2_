@@ -111,6 +111,48 @@ function tentarAbobora() {
         addLog(`⚖️ Sentença: ${p.pena} anos de reclusão.`, "var(--danger)");
     }
     closeMod();
+
+    function menuCadeia() {
+    const c = document.getElementById('m-content');
+    document.getElementById('m-title').innerText = "DETENÇÃO";
+    c.innerHTML = `
+        <div class="card"><b>Respeito:</b> ${p.respeito} | <b>Gangue:</b> ${p.gangue}</div>
+        <button class="btn-age btn-presidio" onclick="entrarGangue()">🤝 Juntar-se a uma Gangue</button>
+        <button class="btn-age btn-presidio" onclick="tentarFuga()">🏃 Tentar Fuga Desesperada</button>
+        <button class="btn-age btn-presidio" onclick="trabalharLavanderia()">🧺 Trabalhar na Lavanderia</button>
+    `;
+}
+
+function entrarGangue() {
+    if(p.respeito > 20) {
+        p.gangue = "Caveiras do Pátio";
+        flash("💀 Você agora faz parte de uma gangue!");
+    } else {
+        flash("❌ Você é muito 'peixe novo'. Ganhe respeito primeiro.");
+    }
+    closeMod();
+}
+
+function tentarFuga() {
+    let chance = p.gangue !== "Nenhuma" ? 30 : 10;
+    if(Math.random()*100 < chance) {
+        p.preso = false;
+        p.pena = 0;
+        flash("🔓 FUGA COM SUCESSO! Você está foragido.");
+        addLog("🏃 Você escapou da cadeia pelo túnel!");
+    } else {
+        p.pena += 2;
+        flash("👮 Capturado! Sua pena aumentou em 2 anos.");
+    }
+    closeMod();
+}
+
+function trabalharLavanderia() {
+    p.respeito += 2;
+    addLog("🧺 Você trabalhou e ganhou respeito entre os detentos.");
+    closeMod();
+
+
 }
 
 function estudar() { p.edu++; addLog("🧠 Estudaste."); closeMod(); }
