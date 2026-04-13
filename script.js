@@ -191,13 +191,21 @@ function abrir(m) {
 function renderSubMenu(tipo) {
     const container = document.getElementById('sub-job-content');
     container.innerHTML = "";
+
     if (tipo === 'fama') {
         renderJobSection(container, "Atleta ⚽", DB.futebol, 'futebol');
         renderJobSection(container, "Artista 🎭", DB.artista, 'artista');
     } else {
-        renderJobSection(container, "Medicina 🏥", DB.medicina, 'medicina');
+        // Exibe as 6 novas categorias de empregos comuns
+        renderJobSection(container, "Saúde 🏥", DB.saude, 'saude');
+        renderJobSection(container, "Justiça & Militar ⚖️", DB.justica, 'justica');
+        renderJobSection(container, "Tecnologia 💻", DB.tech, 'tech');
+        renderJobSection(container, "Serviços & Obras 🛠️", DB.operacional, 'operacional');
+        renderJobSection(container, "Transporte & Mídia ✈️", DB.comunicacao, 'comunicacao');
+        renderJobSection(container, "Educação 📚", DB.educacao, 'educacao');
     }
 }
+
 
 function renderJobSection(cont, titulo, dados, path) {
     cont.innerHTML += `<h3 style='margin:10px 0; font-size:14px; color:var(--primary)'>${titulo}</h3>`;
