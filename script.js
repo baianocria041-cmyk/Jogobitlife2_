@@ -4,7 +4,14 @@ let p = {
     ano: 0, 
     grana: 50, 
     edu: 0, 
-    fans: 0, 
+let p = {
+social: {
+    yt: { inscritos: 0, videos: 0, prata: false },
+    tt: { seguidores: 0, dancinhas: 0 },
+    fb: { amigos: 0, posts: 0 }
+},
+fans: 0, // Total geral de fama
+
     job: null, 
     path: "", 
     level: -1, 
@@ -111,8 +118,27 @@ function abrir(m) {
         renderJobSection(c, "Medicina 🏥", DB.medicina, 'medicina');
     } else if(m === 'life') {
         c.innerHTML = `<button class="btn-age dan" style="background:var(--danger); width:100%" onclick="tentarAbobora()">🎃 TENTAR ABÓBORA</button>`;
-    } else if(m === 'social') {
-        c.innerHTML = `<button class="btn-age soc" style="background:var(--social); width:100%" onclick="postar()">📸 POSTAR VIRAL</button>`;
+        } else if(m === 'social') {
+        c.innerHTML = `
+            <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
+                <b style="color:#ff0000">🎥 YOUTUBE</b>
+                <p style="font-size:11px">Inscritos: ${p.social.yt.inscritos.toLocaleString()}</p>
+                <button class="btn-menu soc" style="width:100%; padding:10px;" onclick="postarRede('yt')">Gravar Vlog</button>
+            </div>
+            
+            <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
+                <b style="color:#00f2ea">🎵 TIKTOK</b>
+                <p style="font-size:11px">Seguidores: ${p.social.tt.seguidores.toLocaleString()}</p>
+                <button class="btn-menu soc" style="width:100%; padding:10px; background:#000; border:1px solid #ff0050" onclick="postarRede('tt')">Fazer Dancinha</button>
+            </div>
+
+            <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
+                <b style="color:#1877f2">👥 FACEBOOK</b>
+                <p style="font-size:11px">Amigos: ${p.social.fb.amigos.toLocaleString()}</p>
+                <button class="btn-menu sec" style="width:100%; padding:10px;" onclick="postarRede('fb')">Atualizar Status</button>
+            </div>
+            
+        `;
     } else if(m === 'edu') {
         c.innerHTML = `<button class="btn-age acc" style="background:var(--accent); width:100%" onclick="estudar()">📚 ESTUDAR (+1 INT)</button>`;
     }
@@ -173,6 +199,34 @@ function postar() { let g = Math.floor(Math.random()*5000); p.fans += g; flash(`
 function flash(t) { const e = document.getElementById('pop-alert'); if(e) { e.innerText = t; e.style.display = 'block'; setTimeout(()=>e.style.display='none', 2000); } }
 function addLog(m, color="white") { const log = document.getElementById('log'); if(log) log.innerHTML += `<div class="log-entry" style="border-left-color:${color}">${m}</div>`; }
 function closeMod() { document.getElementById('modal').style.display = 'none'; update(); }
+function postarRede(rede) {
+    let ganho = 0;
+    let msg = "";
+
+    if (rede === 'yt') {
+        ganho = Math.floor(Math.random() * 2000) + 100;
+        p.social.yt.inscritos += ganho;
+        p.social.yt.videos++;
+        msg = `🎥 Vídeo novo! +${ganho} inscritos.`;
+        if(p.social.yt.inscritos > 100000 && !p.social.yt.prata) {
+            p.social.yt.prata = true;
+            flash("🥈 PLACA DE PRATA RECEBIDA!");
+        }
+    } else if (rede === 'tt') {
+        ganho = Math.floor(Math.random() * 8000); // TikTok viraliza mais fácil
+        p.social.tt.seguidores += ganho;
+        msg = `🎵 Sua dancinha viralizou! +${ganho} seguidores.`;
+    } else if (rede === 'fb') {
+        ganho = Math.floor(Math.random() * 50);
+        p.social.fb.amigos += ganho;
+        msg = `👥 Post compartilhado! +${ganho} amigos.`;
+    }
+
+    p.fans += ganho; // Soma ao total de fama do jogo
+    addLog(msg, "var(--social)");
+    closeMod();
+    
+}
 
 // Inicializa o jogo
 iniciar();
