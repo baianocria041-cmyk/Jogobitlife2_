@@ -1,0 +1,26 @@
+
+const BANCO_DE_DADOS = {
+    "config": {
+        "imposto_renda": 0.15, // 15% de imposto sobre salários altos
+        "piso_pobreza": 2000,   // Limite para pedir Bolsa Família
+        "valor_bolsa": 600
+    },
+    "empregos": [
+        { "n": "Auxiliar de Limpeza", "s": 1320, "a": 16, "e": 0, "dif": "Fácil", "setor": "Serviços" },
+        { "n": "Vendedor de Loja", "s": 1800, "a": 18, "e": 1, "dif": "Média", "setor": "Vendas" },
+        { "n": "Desenvolvedor Fullstack", "s": 8500, "a": 20, "e": 2, "dif": "Difícil", "setor": "TI" },
+        { "n": "Neurocirurgião Sênior", "s": 45000, "a": 30, "e": 4, "dif": "Extrema", "setor": "Saúde" },
+        { "n": "Gari", "s": 1600, "a": 18, "e": 0, "dif": "Fácil", "setor": "Serviços" },
+        { "n": "Cientista de Dados", "s": 12000, "a": 22, "e": 3, "dif": "Muito Difícil", "setor": "Tecnologia" }
+        // Você pode usar o gerador Python anterior para criar 20.000 destes
+    ],
+    "eventos_sociais": [
+        "O governo anunciou revisão no cadastro social.",
+        "A inflação subiu, os preços na loja aumentaram!",
+        "O imposto de renda teve um novo reajuste."
+    ]
+};
+                                       { "n": "Iate", "v": 12000000 }
+                                                                  ]
+                                                                  }
+
