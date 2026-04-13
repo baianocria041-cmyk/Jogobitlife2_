@@ -1,26 +1,62 @@
-
 const BANCO_DE_DADOS = {
     "config": {
-        "imposto_renda": 0.15, // 15% de imposto sobre salários altos
-        "piso_pobreza": 2000,   // Limite para pedir Bolsa Família
-        "valor_bolsa": 600
+        "imposto_renda_corte": 5000,
+        "piso_bolsa": 2100,
+        "valor_auxilio": 600
     },
     "empregos": [
-        { "n": "Auxiliar de Limpeza", "s": 1320, "a": 16, "e": 0, "dif": "Fácil", "setor": "Serviços" },
-        { "n": "Vendedor de Loja", "s": 1800, "a": 18, "e": 1, "dif": "Média", "setor": "Vendas" },
-        { "n": "Desenvolvedor Fullstack", "s": 8500, "a": 20, "e": 2, "dif": "Difícil", "setor": "TI" },
-        { "n": "Neurocirurgião Sênior", "s": 45000, "a": 30, "e": 4, "dif": "Extrema", "setor": "Saúde" },
-        { "n": "Gari", "s": 1600, "a": 18, "e": 0, "dif": "Fácil", "setor": "Serviços" },
-        { "n": "Cientista de Dados", "s": 12000, "a": 22, "e": 3, "dif": "Muito Difícil", "setor": "Tecnologia" }
-        // Você pode usar o gerador Python anterior para criar 20.000 destes
+        { "n": "Faxineiro", "s": 1400, "a": 16, "e": 0, "dif": "Fácil" },
+        { "n": "Vendedor", "s": 2000, "a": 18, "e": 0, "dif": "Fácil" },
+        { "n": "Técnico de TI", "s": 3500, "a": 18, "e": 1, "dif": "Média" },
+        { "n": "Programador", "s": 6000, "a": 20, "e": 2, "dif": "Difícil" },
+        { "n": "Gerente", "s": 12000, "a": 25, "e": 3, "dif": "Difícil" },
+        { "n": "Médico", "s": 25000, "a": 28, "e": 4, "dif": "Extrema" }
+                // SERVIÇOS E COMÉRCIO
+        { "n": "Operador de Caixa", "s": 1600, "a": 16, "e": 0, "dif": "Fácil" },
+        { "n": "Segurança de Shopping", "s": 2200, "a": 21, "e": 1, "dif": "Média" },
+        { "n": "Cabeleireiro", "s": 3000, "a": 18, "e": 1, "dif": "Média" },
+        { "n": "Cozinheiro de Restaurante", "s": 2800, "a": 18, "e": 1, "dif": "Média" },
+        { "n": "Motorista de Ônibus", "s": 3500, "a": 21, "e": 1, "dif": "Média" },
+        
+        // TECNOLOGIA E MÍDIA
+        { "n": "YouTuber / Influencer", "s": 5000, "a": 14, "e": 0, "dif": "Difícil" },
+        { "n": "Designer Gráfico", "s": 4200, "a": 18, "e": 2, "dif": "Média" },
+        { "n": "Editor de Vídeo", "s": 4800, "a": 18, "e": 2, "dif": "Média" },
+        { "n": "Analista de Redes", "s": 7500, "a": 20, "e": 3, "dif": "Difícil" },
+        { "n": "Cientista de Dados", "s": 14000, "a": 22, "e": 4, "dif": "Extrema" },
+        { "n": "Desenvolvedor de Jogos", "s": 9000, "a": 18, "e": 3, "dif": "Muito Difícil" },
+
+        // SAÚDE E CIÊNCIA
+        { "n": "Farmacêutico", "s": 5500, "a": 23, "e": 3, "dif": "Difícil" },
+        { "n": "Fisioterapeuta", "s": 6200, "a": 23, "e": 3, "dif": "Difícil" },
+        { "n": "Psicólogo", "s": 7000, "a": 24, "e": 3, "dif": "Difícil" },
+        { "n": "Veterinário", "s": 8500, "a": 24, "e": 4, "dif": "Muito Difícil" },
+        { "n": "Astrônomo", "s": 13000, "a": 25, "e": 5, "dif": "Extrema" },
+
+        // JURÍDICO E POLÍTICA
+        { "n": "Escrivão", "s": 4500, "a": 21, "e": 2, "dif": "Média" },
+        { "n": "Delegado de Polícia", "s": 18000, "a": 25, "e": 4, "dif": "Muito Difícil" },
+        { "n": "Deputado Estadual", "s": 25000, "a": 21, "e": 1, "dif": "Extrema" },
+        { "n": "Diplomata", "s": 22000, "a": 25, "e": 5, "dif": "Extrema" },
+
+        // AVIAÇÃO E ENGENHARIA
+        { "n": "Mecânico de Aeronaves", "s": 8000, "a": 20, "e": 3, "dif": "Difícil" },
+        { "n": "Comissário de Bordo", "s": 6500, "a": 19, "e": 2, "dif": "Média" },
+        { "n": "Piloto Comercial", "s": 28000, "a": 21, "e": 4, "dif": "Muito Difícil" },
+        { "n": "Engenheiro Civil", "s": 11000, "a": 23, "e": 3, "dif": "Muito Difícil" },
+        { "n": "Arquiteto", "s": 9500, "a": 23, "e": 3, "dif": "Difícil" },
+
+        // CORPORATIVO E FINANÇAS
+        { "n": "Corretor de Imóveis", "s": 5000, "a": 18, "e": 1, "dif": "Média" },
+        { "n": "Gerente de Banco", "s": 11500, "a": 25, "e": 3, "dif": "Difícil" },
+        { "n": "Analista de Bolsa", "s": 16000, "a": 22, "e": 4, "dif": "Muito Difícil" },
+        { "n": "Diretor Comercial", "s": 35000, "a": 30, "e": 5, "dif": "Extrema" },
+        { "n": "Presidente de Empresa", "s": 95000, "a": 35, "e": 5, "dif": "Extrema" }
     ],
-    "eventos_sociais": [
-        "O governo anunciou revisão no cadastro social.",
-        "A inflação subiu, os preços na loja aumentaram!",
-        "O imposto de renda teve um novo reajuste."
+    "crimes": [
+        { "n": "Pequeno Furto", "r": 0.2, "p": 800, "t": 1 },
+        { "n": "Roubo de Carro", "r": 0.5, "p": 15000, "t": 3 },
+        { "n": "Assalto a Banco", "r": 0.8, "p": 150000, "t": 8 },
+        { "n": "Hackear Sistema", "r": 0.4, "p": 50000, "t": 5 }
     ]
 };
-                                       { "n": "Iate", "v": 12000000 }
-                                                                  ]
-                                                                  }
-
