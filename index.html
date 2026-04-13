@@ -2,310 +2,48 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>BitLife Brasil: Ultimate Edition</title>
+    <title>BitLife Brasil: Dark Premium</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <style>
-        :root {
-            --bg: #0f172a; --card: #1e293b; --primary: #22c55e;
-            --secondary: #3b82f6; --danger: #ef4444; --social: #ec4899;
-            --text: #f8fafc; --gold: #eab308; --accent: #a855f7;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); height: 100vh; color: var(--text); overflow: hidden; }
-        
-        #app { width: 100%; max-width: 500px; height: 100vh; margin: auto; display: flex; flex-direction: column; position: relative; }
-
-        /* Status Premium */
-        #header { 
-            background: linear-gradient(135deg, var(--primary), #166534); padding: 25px 20px; 
-            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;
-        }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .stat-item { background: rgba(0,0,0,0.2); padding: 8px; border-radius: 12px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-
-        /* Feed de Notícias */
-        #log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 12px; padding-bottom: 140px; }
-        .log-entry { 
-            background: var(--card); padding: 16px; border-radius: 20px; font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 6px solid var(--primary);
-            animation: slideUp 0.4s ease-out; line-height: 1.4;
-        }
-
-        /* Navegação Fixa Estilizada */
-        .nav-container {
-            position: absolute; bottom: 0; width: 100%; background: rgba(30, 41, 59, 0.95);
-            padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px); z-index: 99;
-        }
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        
-        button { border: none; border-radius: 16px; font-weight: bold; cursor: pointer; color: white; padding: 12px 5px; font-size: 11px; transition: 0.3s; }
-        button:active { transform: scale(0.95); }
-        
-        .btn-age { 
-            grid-column: span 4; padding: 18px; font-size: 20px; 
-            background: linear-gradient(to right, #22c55e, #16a34a); 
-            margin-bottom: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-        }
-
-        /* Menu Overlay */
-        .overlay { 
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg); z-index: 1000; flex-direction: column; padding: 25px; 
-        }
-        .overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        
-        .card { 
-            background: var(--card); padding: 18px; border-radius: 20px; margin-bottom: 15px; 
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .card-info b { font-size: 16px; color: var(--primary); }
-        .card-info p { font-size: 12px; color: #94a3b8; }
-
-        #pop-alert {
-            display: none; position: absolute; top: 35%; left: 10%; width: 80%;
-            background: var(--gold); color: #000; padding: 25px; border-radius: 25px;
-            text-align: center; z-index: 2000; font-weight: 900; font-size: 18px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 4px solid #fff;
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="app">
-    <div id="pop-alert">🏆 CONQUISTA!</div>
+    <div id="pop-alert">LEVEL UP!</div>
 
     <div id="header">
-        <div id="v-job" style="font-size: 20px; font-weight: 900; letter-spacing: 1px;">Recém-nascido</div>
-        <div id="v-money" style="font-size: 32px; font-weight: 900; margin: 10px 0; color: #fff;">R$ 0</div>
+        <div id="v-job">Nascituro</div>
+        <div id="v-money">R$ 0</div>
         <div class="stats-grid">
-            <div class="stat-item">📅 <span id="v-date">Jan, 0 anos</span></div>
-            <div class="stat-item">🧠 Edu: <span id="v-edu">0</span></div>
-            <div class="stat-item">🔥 Fama: <span id="v-fans">0</span></div>
+            <div class="stat-item">📅 Mês/Ano<b id="v-date">Jan, 0</b></div>
+            <div class="stat-item">🧠 Intelecto<b id="v-edu">0</b></div>
+            <div class="stat-item">🔥 Seguidores<b id="v-fans">0</b></div>
         </div>
-        <div id="v-birth" style="font-size: 10px; margin-top: 10px; color: rgba(255,255,255,0.7);"></div>
+        <div id="v-birth"></div>
     </div>
 
     <div id="log"></div>
 
     <div id="modal" class="overlay">
-        <div class="overlay-header">
+        <div class="modal-header">
             <h2 id="m-title">MENU</h2>
-            <button onclick="closeMod()" style="background:#ef4444; padding: 8px 15px;">X</button>
+            <button onclick="closeMod()" class="btn-close">FECHAR</button>
         </div>
-        <div id="m-content" style="flex:1; overflow-y:auto;"></div>
+        <div id="m-content"></div>
     </div>
 
     <div class="nav-container">
         <div class="nav-grid">
-            <button class="btn-age" onclick="passarMes()">PRÓXIMO MÊS ➔</button>
-            <button style="background: var(--secondary)" onclick="abrir('carreira')">💼 Carreira</button>
-            <button style="background: var(--accent)" onclick="abrir('estudo')">🎓 Estudo</button>
-            <button style="background: var(--social)" onclick="abrir('social')">📱 Social</button>
-            <button style="background: var(--danger)" onclick="abrir('vida')">❤️ Vida</button>
+            <button class="btn-age" onclick="passarMes()">AVANÇAR MÊS</button>
+            <button class="btn-menu sec" onclick="abrir('jobs')">💼 CARREIRA</button>
+            <button class="btn-menu acc" onclick="abrir('edu')">🎓 ESTUDO</button>
+            <button class="btn-menu soc" onclick="abrir('social')">📱 SOCIAL</button>
+            <button class="btn-menu dan" onclick="abrir('life')">🎲 VIDA</button>
         </div>
     </div>
 </div>
 
-<script>
-// --- SISTEMA DE DADOS AVANÇADO ---
-const DB = {
-    carreiras: {
-        futebol: [
-            {n: "Escolinha de Bairro", sal: 0, idade: 7, req: {fama: 0}},
-            {n: "Base do Clube Regional", sal: 800, idade: 13, req: {fama: 500}},
-            {n: "Profissional Série B", sal: 5000, idade: 17, req: {fama: 10000}},
-            {n: "Estrela Série A", sal: 80000, idade: 18, req: {fama: 100000}},
-            {n: "Seleção / Europa", sal: 1500000, idade: 20, req: {fama: 2000000}}
-        ],
-        musica: [
-            {n: "Cantar no Chuveiro", sal: 0, idade: 5, req: {fama: 0}},
-            {n: "Apresentação na Escola", sal: 0, idade: 10, req: {fama: 100}},
-            {n: "Cantor de Barzinho", sal: 1200, idade: 16, req: {fama: 2000}},
-            {n: "Sucesso no TikTok", sal: 15000, idade: 16, req: {fama: 500000}},
-            {n: "Estrela do Pop", sal: 500000, idade: 18, req: {fama: 5000000}}
-        ],
-        medicina: [
-            {n: "Estudante de Medicina", sal: -4000, idade: 18, req: {edu: 5}},
-            {n: "Residente", sal: 3500, idade: 24, req: {edu: 8}},
-            {n: "Médico Geral", sal: 18000, idade: 26, req: {edu: 10}},
-            {n: "Cirurgião Chefe", sal: 85000, idade: 35, req: {edu: 15}}
-        ],
-        comum: [
-            {n: "Entregador", sal: 1800, idade: 16, req: {edu: 0}},
-            {n: "Vendedor de Loja", sal: 2200, idade: 18, req: {edu: 1}},
-            {n: "Gerente de Banco", sal: 12000, idade: 25, req: {edu: 6}}
-        ]
-    },
-    eventosFutebol: [
-        "⚽ Você marcou um golaço de bicicleta!",
-        "👟 Você errou um pênalti decisivo...",
-        "🚑 Você se lesionou no treino e ficará de fora.",
-        "🔥 Um olheiro europeu está te observando!",
-        "😡 O treinador te deixou no banco."
-    ]
-};
-
-let p = {
-    mes: 0, ano: 0, grana: 50, edu: 0, fama: 0, 
-    carreira: null, nivelCarreira: -1, 
-    tipoCaminho: "", // futebol, musica, medicina, comum
-    nascimento: "", energia: 100, relacao: null
-};
-
-// --- CORE ---
-function iniciar() {
-    p.nascimento = `${Math.floor(Math.random()*28)+1}/${Math.floor(Math.random()*12)+1}/2026`;
-    document.getElementById('v-birth').innerText = `Nascimento: ${p.nascimento}`;
-    addLog("👶 Você nasceu em um hospital público. A vida começou!");
-    update();
-}
-
-function update() {
-    document.getElementById('v-money').innerText = "R$ " + Math.floor(p.grana).toLocaleString();
-    document.getElementById('v-edu').innerText = p.edu;
-    document.getElementById('v-fans').innerText = p.fama >= 1000000 ? (p.fama/1000000).toFixed(1) + "M" : p.fama.toLocaleString();
-    document.getElementById('v-date').innerText = `${["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"][p.mes]}, ${p.ano} anos`;
-    
-    let cargo = "Nenhum";
-    if(p.tipoCaminho && p.nivelCarreira >= 0) {
-        cargo = DB.carreiras[p.tipoCaminho][p.nivelCarreira].n;
-    }
-    document.getElementById('v-job').innerText = cargo;
-}
-
-function passarMes() {
-    p.mes++;
-    if(p.mes > 11) { p.mes = 0; p.ano++; flash(`🎈 ${p.ano} ANOS COMPLETOS!`); }
-
-    // Renda e Carreira
-    if(p.tipoCaminho && p.nivelCarreira >= 0) {
-        let job = DB.carreiras[p.tipoCaminho][p.nivelCarreira];
-        p.grana += (job.sal / 12);
-        
-        // Eventos de Atleta
-        if(p.tipoCaminho === 'futebol' && Math.random() < 0.2) {
-            let ev = DB.eventosFutebol[Math.floor(Math.random()*DB.eventosFutebol.length)];
-            addLog(ev, "var(--primary)");
-            p.fama += Math.random() > 0.5 ? 500 : -200;
-        }
-    }
-
-    // Monetização Automática (Redes Sociais)
-    if(p.fama > 100000) {
-        let ads = (p.fama * 0.003);
-        p.grana += ads;
-        if(p.mes === 0) addLog(`📱 Adsense do YouTube: +R$ ${ads.toFixed(0)}`, "var(--social)");
-    }
-
-    update();
-}
-
-function abrir(menu) {
-    const c = document.getElementById('m-content');
-    const t = document.getElementById('m-title');
-    c.innerHTML = ""; document.getElementById('modal').style.display = 'flex';
-    t.innerText = menu.toUpperCase();
-
-    if(menu === 'carreira') {
-        c.innerHTML = `<p style="margin-bottom:15px; font-size:12px; opacity:0.7">Escolha seu caminho ou peça promoção se já estiver em um.</p>`;
-        
-        // Renderizar Categorias
-        Object.keys(DB.carreiras).forEach(cat => {
-            let nextNivel = (p.tipoCaminho === cat) ? p.nivelCarreira + 1 : 0;
-            let job = DB.carreiras[cat][nextNivel];
-
-            if(job) {
-                let pode = (p.ano >= job.idade && p.fama >= (job.req.fama || 0) && p.edu >= (job.req.edu || 0));
-                c.innerHTML += `
-                    <div class="card">
-                        <div class="card-info">
-                            <b>${job.n}</b>
-                            <p>Salário: R$ ${job.sal}/mês | Idade: ${job.idade}+</p>
-                        </div>
-                        <button style="background:${pode?'var(--primary)':'#444'}" onclick="tentarJob('${cat}', ${nextNivel})">
-                            ${p.tipoCaminho === cat ? 'PROMOÇÃO' : 'INICIAR'}
-                        </button>
-                    </div>`;
-            }
-        });
-    } else if(menu === 'social') {
-        c.innerHTML = `
-            <div class="card" style="flex-direction:column; align-items:flex-start">
-                <b>Postar no Instagram</b>
-                <button style="background:var(--social); width:100%; margin-top:10px" onclick="postar('ig')">📸 Tirar Selfie</button>
-            </div>
-            <div class="card" style="flex-direction:column; align-items:flex-start">
-                <b>Gravar para o YouTube</b>
-                <button style="background:#f00; width:100%; margin-top:10px" onclick="postar('yt')">🎥 Gravar Vídeo</button>
-            </div>`;
-    } else if(menu === 'estudo') {
-        c.innerHTML = `
-            <div class="card">
-                <b>Ler um Livro</b>
-                <button style="background:var(--accent)" onclick="estudar()">+1 Inteligência</button>
-            </div>
-            <div class="card">
-                <b>Curso de Inglês</b>
-                <button style="background:var(--accent)" onclick="estudar(2, 500)">R$ 500</button>
-            </div>`;
-    } else if(menu === 'vida') {
-        c.innerHTML = `
-            <button class="btn-age" style="background:#e67e22; width:100%" onclick="rolê()">💃 Ir para Balada (R$ 200)</button>
-            <button class="btn-age" style="background:var(--danger); width:100%" onclick="academia()">💪 Treinar Academia</button>
-        `;
-    }
-}
-
-function tentarJob(cat, nivel) {
-    let job = DB.carreiras[cat][nivel];
-    if(p.ano >= job.idade && p.fama >= (job.req.fama || 0) && p.edu >= (job.req.edu || 0)) {
-        p.tipoCaminho = cat;
-        p.nivelCarreira = nivel;
-        flash(`🚀 NOVO CARGO: ${job.n}`);
-        addLog(`✅ Você agora é ${job.n}!`);
-        closeMod();
-    } else {
-        alert("Você ainda não cumpre os requisitos de idade, fama ou educação para este cargo!");
-    }
-}
-
-function postar(tipo) {
-    let ganho = tipo === 'yt' ? Math.floor(Math.random()*5000) : Math.floor(Math.random()*1000);
-    p.fama += ganho;
-    addLog(`📱 Seu post rendeu ${ganho} novos seguidores!`);
-    flash("📸 VIRALIZOU!");
-    closeMod();
-}
-
-function estudar(pontos = 1, custo = 0) {
-    if(p.grana >= custo) {
-        p.grana -= custo;
-        p.edu += pontos;
-        addLog(`📚 Você estudou muito. Sabedoria: ${p.edu}`);
-        closeMod();
-    }
-}
-
-function flash(t) {
-    const el = document.getElementById('pop-alert');
-    el.innerText = t; el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 2500);
-}
-
-function addLog(m, c = "var(--primary)") {
-    const l = document.getElementById('log');
-    l.innerHTML += `<div class="log-entry" style="border-left-color:${c}">${m}</div>`;
-}
-
-function closeMod() { document.getElementById('modal').style.display = 'none'; update(); }
-
-iniciar();
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
